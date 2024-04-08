@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "https://europe-west1-million-mediaverse-debug.cloudfunctions.net";
+const BASE_URL = "http://localhost:8000";
 
 const httpService = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || BASE_URL,

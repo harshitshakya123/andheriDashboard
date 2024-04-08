@@ -1,19 +1,28 @@
 export const GET_GAME_LIST_URL = `/game/gameDetails`;
-export const GET_STORE_MANAGEMENT_LIST_URL = `/store`;
-export const LOGIN_URL = `/admin/login`;
-export const GET_DASHBOARD_LIST_URL = `/users/dashboard`;
 export const CREATE_ADMIN_USER_URL = `/admin/create`;
 export const FORGOT_PASSWORD_URL = `/admin/forget-password?email=`;
 export const RESET_PASSWORD_URL = `/admin/reset-password`;
-export const ADMIN_EDIT_DETAILS_URL = `/admin/update/`;
 
 //user
-export const GET_USER_LIST_URL = `/users/getuser`;
+export const LOGIN_URL = `api/v1/users/login`;
+export const LOGIN_OUT = `api/v1/users/logout`;
+export const GET_USER_LIST_URL = `api/v1/users/getUsers`;
+export const GET_USER_DATA_URL = `api/v1/users/getUser?id=`;
+export const GET_DASHBOARD_LIST_URL = `api/v1/users/dashboard`;
+export const ADMIN_EDIT_DETAILS_URL = `api/v1/users/edit-user`;
+
+//bids
+export const GET_BIDS_LIST_URL = `api/v1/bids/get`;
+export const GET_BIDS_CHART_URL = `api/v1/bids/bids-chart`;
+export const UPDATE_PAYMENT_STATUS_URL = `api/v1/payment/approve`;
+
+//payment
+export const GET_PAYMENT_LIST_URL = `api/v1/payment/get`;
+
 export const GET_Agent_LIST_URL = `/users/getAgent`;
 export const UPDATE_USER_STATUS_URL = `/users/active-deactive/`;
 export const UPDATE_USER_URL = `/users/update/`;
 export const USER_CONFIG_URL = `/game/game-level`;
-export const GET_USER_DATA_URL = `/users/userDetailsAdmin?id=`;
 export const GET_USER_FOLLOWER_URL = `/users/followers`;
 export const GET_USER_FOLLOWING_URL = `/users/following`;
 export const UPDATE_USER_iMAGE_URL = `/users/update-image/`;

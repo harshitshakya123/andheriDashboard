@@ -1,5 +1,5 @@
 export const rolePermissions = {
-  "Super Admin": [
+  admin: [
     "dashboard",
     "userManage",
     "bidsManage",

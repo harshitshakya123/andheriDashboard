@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Table, Input, Button, Space } from "antd";
 import Highlighter from "react-highlight-words";
-import { SearchOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 
 const CustomTable = ({
   columns,
@@ -9,11 +9,11 @@ const CustomTable = ({
   loading,
   scrollX,
   scrollY,
-  leftDisabled = true,
-  leftPagination,
-  RightDisabled = true,
-  rightPagination,
-  pagination = false,
+  // leftDisabled = true,
+  // leftPagination,
+  // RightDisabled = true,
+  // rightPagination,
+  // pagination = false,
 }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -97,16 +97,17 @@ const CustomTable = ({
         loading={loading}
         sorter={sorter}
         dataSource={dataList}
+        rowKey={(record) => record.uuid}
         scroll={{
           x: scrollX,
           y: scrollY,
         }}
-        pagination={{
-          onChange: (e) => console.log(e),
-          pageSize: 10,
-          total: 20,
-        }}
-        // pagination={false}
+        // pagination={{
+        //   onChange: (e) => console.log(e),
+        //   pageSize: 10,
+        //   total: 20,
+        // }}
+        pagination={true}
       />
       {/* {pagination && (
         <div

@@ -44,8 +44,8 @@ function App() {
       {loading ? (
         <FullPageLoader />
       ) : (
-        // <RouteConfig userRole={userProfileC?.userData?.role} signedIn={userProfileC?.signedIn} />
-        <RouteConfig userRole={"Super Admin"} signedIn={true} />
+        <RouteConfig userRole={userProfileC?.userData?.role} signedIn={userProfileC?.signedIn} />
+        // <RouteConfig userRole={"Super Admin"} signedIn={true} />
       )}
     </>
   );

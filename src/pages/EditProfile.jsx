@@ -1,15 +1,14 @@
-import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Tag, Typography, Upload, message } from "antd";
+import { Button, Collapse, Form, Image, Input, Modal, Tag, Upload, message } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../services/apiServices";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-const { Paragraph } = Typography;
 import { UploadOutlined, DeleteOutlined, ExclamationCircleFilled, LoadingOutlined } from "@ant-design/icons";
 import { MAX_IMAGE_FILE_SIZE_MB, emptyImage } from "../utils/constant";
 import commonService from "../services/commonServices";
 import { UserProfileContext } from "../store/UserProfileStore";
-import moment from "moment";
+// import moment from "moment";
 // import dayjs from "dayjs";
 
 const { confirm } = Modal;
@@ -110,15 +109,16 @@ const EditProfile = () => {
     if (!isEdit) {
       setIsEdit((prev) => !prev);
       setEditData({
-        name: adminData?.name,
-        address: adminData?.address,
-        dob: adminData?.dob,
+        fullName: adminData?.fullName,
+        // address: adminData?.address,
+        // dob: adminData?.dob,
       });
       return;
     }
     setEditLoading(true);
-    const res = await apiService.updateAdminDetails({ ...editData, id: adminData?.id });
-    if (res?.status) {
+    const res = await apiService.updateAdminDetails({ ...editData });
+    console.log(res, editData);
+    if (res?.success) {
       message.success("Profile updated successfully");
       setIsEdit((prev) => !prev);
       dispatchUserProfile({
@@ -190,16 +190,16 @@ const EditProfile = () => {
                 <div className="label">Name</div>
                 <span>
                   {!isEdit ? (
-                    adminData?.name
+                    adminData?.fullName
                   ) : (
                     <Input
-                      onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                      value={editData?.name}
+                      onChange={(e) => setEditData({ ...editData, fullName: e.target.value })}
+                      value={editData?.fullName}
                     />
                   )}
                 </span>
               </div>
-              <div className="item">
+              {/* <div className="item">
                 <div className="label">Address</div>
                 <span>
                   {!isEdit ? (
@@ -211,8 +211,8 @@ const EditProfile = () => {
                     />
                   )}
                 </span>
-              </div>
-              <div className="item">
+              </div> */}
+              {/* <div className="item">
                 <div className="label">DOB</div>
                 <span>
                   {!isEdit ? (
@@ -227,33 +227,37 @@ const EditProfile = () => {
                     // <Input onChange={(e) => setEditData({ ...editData, dob: e.target.value })} value={editData?.dob} />
                   )}
                 </span>
-              </div>
-              <div className="item">
+              </div> */}
+              {/* <div className="item">
                 <div className="label">Email</div>
                 <Paragraph copyable>{adminData?.email}</Paragraph>
-              </div>
+              </div> */}
 
+              {/* <div className="item">
+                <div className="label">Phone Number</div>
+                <span>{adminData?.phone}</span>
+              </div> */}
               <div className="item">
                 <div className="label">Phone Number</div>
-                <span>{adminData?.phone_number}</span>
+                <span>{adminData?.phone}</span>
               </div>
-              <div className="item">
-                <div className="label">Phone Number</div>
-                <span>{adminData?.dob || "---"}</span>
-              </div>
-              <div className="item">
+              {/* <div className="item">
                 <div className="label">Status</div>
                 <span>{adminData?.status == 0 ? "Active" : "Inactive"}</span>
+              </div> */}
+              <div className="item">
+                <div className="label">Amount</div>
+                {/* <span>{adminData?.amount}</span>
+                 */}
+                <Tag color={"orange"}>{adminData?.amount || "NA"}</Tag>
               </div>
               <div className="item">
                 <div className="label">Role</div>
                 <span>
                   <div style={{ display: "flex" }}>
-                    {adminData?.role?.map((role, index) => (
-                      <Tag key={index} color={"green"}>
-                        {role.toUpperCase() || "NA"}
-                      </Tag>
-                    ))}
+                    {/* {adminData?.role?.map((role, index) => ( */}
+                    <Tag color={"green"}>{adminData?.role?.toUpperCase() || "NA"}</Tag>
+                    {/* ))} */}
                   </div>
                 </span>
               </div>
@@ -323,7 +327,7 @@ export default EditProfile;
 
 const Container = styled.div`
   // height: 500px;
-  height: 80vh;
+  height: 75vh;
   overflow-y: auto;
   padding: 10px;
 

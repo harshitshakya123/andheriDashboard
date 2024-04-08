@@ -6,15 +6,16 @@ import { useTranslation } from "react-i18next";
 import US from "../assets/us.jpg";
 import JP from "../assets/japan.png";
 import { constantColor } from "../utils/constant";
+import apiService from "../services/apiServices";
 const Header = () => {
   const navigate = useNavigate();
   const [userProfileC, dispatchUserProfile] = UserProfileContext();
   const [t, i18n] = useTranslation("global");
 
-  const handleChangeLang = (lang) => {
-    i18n.changeLanguage(lang?.key);
-    localStorage.setItem("lang", lang?.key);
-  };
+  // const handleChangeLang = (lang) => {
+  //   i18n.changeLanguage(lang?.key);
+  //   localStorage.setItem("lang", lang?.key);
+  // };
 
   const profileDropdown = [
     {
@@ -30,7 +31,8 @@ const Header = () => {
       label: (
         <a
           rel="noopener noreferrer"
-          onClick={() => {
+          onClick={async () => {
+            await apiService.logout();
             localStorage.clear();
             dispatchUserProfile({
               type: "SET_SIGNED_IN",
@@ -45,18 +47,18 @@ const Header = () => {
     },
   ];
 
-  const languages = [
-    {
-      key: "en",
-      icon: <Avatar src={US} size={23} gap={4} shape="square" />,
-      onClick: handleChangeLang,
-    },
-    {
-      key: "jp",
-      icon: <Avatar src={JP} size={23} gap={4} shape="square" />,
-      onClick: handleChangeLang,
-    },
-  ];
+  // const languages = [
+  //   {
+  //     key: "en",
+  //     icon: <Avatar src={US} size={23} gap={4} shape="square" />,
+  //     onClick: handleChangeLang,
+  //   },
+  //   {
+  //     key: "jp",
+  //     icon: <Avatar src={JP} size={23} gap={4} shape="square" />,
+  //     onClick: handleChangeLang,
+  //   },
+  // ];
   const colorSelector = Object.keys(constantColor).map((key) => {
     return {
       key: key,
@@ -74,7 +76,7 @@ const Header = () => {
 
   return (
     <Container>
-      <div className="logo">{t("header.logo")}</div>
+      <div className="logo">Andheri</div>
 
       <div className="right-menu">
         <div className="color-picker">
@@ -91,7 +93,7 @@ const Header = () => {
             />
           </Dropdown>
         </div>
-        <div>
+        {/* <div>
           <Dropdown
             menu={{
               items: languages,
@@ -112,7 +114,7 @@ const Header = () => {
               shape="square"
             />
           </Dropdown>
-        </div>
+        </div> */}
         <Dropdown
           menu={{
             items: profileDropdown,
@@ -143,8 +145,7 @@ const Header = () => {
               size="large"
               gap={4}
             >
-              {userProfileC?.userData?.first_name?.charAt(0).toUpperCase() ||
-                userProfileC?.userData?.name?.charAt(0).toUpperCase()}
+              {userProfileC?.userData?.fullName?.charAt(0).toUpperCase()}
             </Avatar>
             <div
               style={{
@@ -164,16 +165,14 @@ const Header = () => {
                   overflow: "hidden",
                 }}
               >
-                {userProfileC?.userData?.first_name || userProfileC?.userData?.name}
+                {userProfileC?.userData?.fullName}
               </span>
               <div
                 style={{
                   fontSize: 13,
                 }}
               >
-                {userProfileC?.userData?.role?.length && userProfileC?.userData?.role.length >= 2
-                  ? "Multi Role"
-                  : userProfileC?.userData?.role[0]}
+                {userProfileC?.userData?.role?.toUpperCase()}
               </div>
             </div>
           </div>

@@ -17,6 +17,7 @@ import {
 import CustomTable from "../../components/CustomTable";
 // import { useTranslation } from "react-i18next";
 import { MAX_IMAGE_FILE_SIZE_MB, emptyImage } from "../../utils/constant";
+import moment from "moment";
 
 const { confirm } = Modal;
 
@@ -39,16 +40,18 @@ const UserDetail = () => {
 
   const fetchList = async () => {
     setLoading(true);
-    const leaderBoardResponse = await apiService.getUserDetailsAdmin(path);
-    setUserDetails(leaderBoardResponse?.data);
+    const userData = await apiService.getUserDetailsAdmin(path);
+    setUserDetails(userData?.data[0]);
+    setFollowers(userData?.data[0]?.userBids);
+    setFollowing(userData?.data[0]?.transactions);
     setLoading(false);
   };
   const fetchFollow = async () => {
     setFollowLoading(true);
-    const followersResponse = await apiService.getUserFollowers(path, "user");
-    const followingResponse = await apiService.getUserFollowing(path, "user");
-    setFollowers(followersResponse?.data);
-    setFollowing(followingResponse?.data);
+    // const followersResponse = await apiService.getUserFollowers(path, "user");
+    // const followingResponse = await apiService.getUserFollowing(path, "user");
+    // setFollowers(followersResponse?.data);
+    // setFollowing(followingResponse?.data);
     setFollowLoading(false);
   };
   const handleSocial = (url) => {
@@ -103,83 +106,131 @@ const UserDetail = () => {
     },
 
     {
-      title: "Name",
-      dataIndex: "first_name",
+      title: "Game",
+      dataIndex: "type",
       key: "1",
       width: 100,
       searchable: true,
     },
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   key: "2",
+    //   width: 100,
+    //   searchable: true,
+    // },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "2",
-      width: 100,
-      searchable: true,
-    },
-    {
-      title: "Contact No",
-      dataIndex: "phone_number",
+      title: "Bid Amount",
+      dataIndex: "bidAmount",
       key: "3",
       width: 80,
       searchable: true,
     },
+    // {
+    //   title: "Winning Status",
+    //   dataIndex: "winningStatus",
+    //   key: "6",
+    //   width: 80,
+    //   searchable: true,
+    // },
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "Winning Amount",
+      dataIndex: "bidAmount",
       key: "6",
       width: 80,
-      searchable: true,
+      render: (_, { bidAmount }) => bidAmount * 2,
+      // searchable: true,
     },
 
-    {
-      title: "User Referral Code",
-      dataIndex: "user_referral_code",
-      key: "5",
-      width: 80,
-      searchable: true,
-    },
+    // {
+    //   title: "User Referral Code",
+    //   dataIndex: "user_referral_code",
+    //   key: "5",
+    //   width: 80,
+    //   searchable: true,
+    // },
 
+    // {
+    //   title: "Level",
+    //   dataIndex: "label",
+    //   key: "9",
+    //   width: 50,
+    //   sorter: {
+    //     compare: (a, b) => a.level - b.level,
+    //     multiple: 1,
+    //   },
+    // },
     {
-      title: "Level",
-      dataIndex: "label",
-      key: "9",
-      width: 50,
-      sorter: {
-        compare: (a, b) => a.level - b.level,
-        multiple: 1,
-      },
-    },
-    {
-      title: "Status",
+      title: "Winning Status",
       key: "status",
       dataIndex: "status",
       width: 60,
-      render: (_, { status }) => {
+      render: (_, { winningStatus }) => {
         return (
           <div style={{ cursor: "pointer" }}>
-            <Tag onClick={() => {}} color={+status ? "geekblue" : "green"}>
-              {+status ? "Inactive" : "Active"}
+            <Tag onClick={() => {}} color={winningStatus === "won" ? "green" : "red"}>
+              {winningStatus}
             </Tag>
           </div>
         );
       },
     },
   ];
+  const transactionColumns = [
+    {
+      title: "Amount",
+      dataIndex: "userAmount",
+      key: "1",
+      width: 100,
+      searchable: true,
+    },
+
+    {
+      title: "Attachment",
+      dataIndex: "attachment",
+      key: "1",
+      width: 100,
+      searchable: true,
+    },
+    {
+      title: "Payment Status",
+      key: "status",
+      dataIndex: "status",
+      width: 60,
+      render: (_, { status }) => {
+        return (
+          <div style={{ cursor: "pointer" }}>
+            <Tag onClick={() => {}} color={status === "Approved" ? "green" : "blue"}>
+              {status}
+            </Tag>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "1",
+      width: 100,
+      // searchable: true,
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+    },
+  ];
 
   const items = [
     {
       key: "1",
-      label: "Followers",
+      label: "My Bids",
       children: (
         <CustomTable columns={followColumns} dataList={followers} loading={loading} scrollY={"calc(100vh - 420px)"} />
       ),
     },
     {
       key: "2",
-      label: "Following",
+      label: "Transaction",
       children: (
         <CustomTable
-          columns={followColumns}
+          columns={transactionColumns}
           dataList={following}
           loading={followLoading}
           scrollY={"calc(100vh - 420px)"}
@@ -264,8 +315,8 @@ const UserDetail = () => {
                   rootClassName="profile-image"
                   src={userDetails?.profile_picture_url || emptyImage}
                 />
-                <Image rootClassName="crown-image" src={userDetails?.crown_image || emptyImage} />
-                <Image rootClassName="social_avatar" src={userDetails?.social_avatar || emptyImage} />
+                {/* <Image rootClassName="crown-image" src={userDetails?.crown_image || emptyImage} />
+                <Image rootClassName="social_avatar" src={userDetails?.social_avatar || emptyImage} /> */}
                 <div className="image-action">
                   <Upload
                     multiple={false}
@@ -298,40 +349,33 @@ const UserDetail = () => {
                     }}
                     src={userDetails?.social_avatar || emptyImage}
                   /> */}
-                  <span>{userDetails?.first_name}</span>
+                  <span>{userDetails?.fullName}</span>
                 </div>
-                <div className="item">
+                {/* <div className="item">
                   <div className="label">Address</div>
                   <span>{userDetails?.address || "---"}</span>
+                </div> */}
+                <div className="item">
+                  <div className="label">Phone Number</div>
+                  <Paragraph copyable>{userDetails?.phone}</Paragraph>
                 </div>
                 <div className="item">
-                  <div className="label">Email</div>
-                  <Paragraph copyable>{userDetails?.email}</Paragraph>
+                  <div className="label">Role</div>
+                  <span>{userDetails?.role}</span>
                 </div>
                 <div className="item">
-                  <div className="label">Level</div>
-                  <span>{userDetails?.label}</span>
+                  <div className="label">Amount</div>
+                  <span>{userDetails?.amount}</span>
                 </div>
-                <div className="item">
-                  <div className="label">Million Point</div>
-                  <span>{userDetails?.million_point}</span>
-                </div>
-                <div className="item">
+                {/* <div className="item">
                   <div className="label">Winning Percentage</div>
                   <span>{userDetails?.winning_percentage}</span>
-                </div>
-                <div className="item">
-                  <div className="label">User Referral Code</div>
-                  <Paragraph copyable>{userDetails?.user_referral_code}</Paragraph>
-                </div>
-                <div className="item">
-                  <div className="label">Referral Count</div>
-                  <span>{userDetails?.referral_count}</span>
-                </div>
-                <div className="item">
+                </div> */}
+
+                {/* <div className="item">
                   <div className="label">Status</div>
                   <span>{userDetails?.status == 0 ? "Active" : "inactive"}</span>
-                </div>
+                </div> */}
               </div>
               <div className="social">
                 {Object.values(userDetails?.social_media_links || {})?.map((item, index) => (
@@ -367,7 +411,8 @@ const UserDetail = () => {
 export default UserDetail;
 
 const Container = styled.div`
-  height: 500px;
+  // height: 500px;
+  height: 75vh;
   overflow-y: auto;
   padding: 10px;
   .user-details {

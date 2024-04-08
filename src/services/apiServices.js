@@ -1,13 +1,10 @@
 import {
   GET_Agent_LIST_URL,
   GET_GAME_LIST_URL,
-  GET_STORE_MANAGEMENT_LIST_URL,
   UPDATE_STORE_URL,
   UPDATE_STORE_STATUS_URL,
   GET_USER_LIST_URL,
-  UPDATE_USER_STATUS_URL,
   UPDATE_USER_URL,
-  GET_MEDIA_VERSE_LIST_URL,
   ADD_GAME_URL,
   UPDATE_GAME_URL,
   DELETE_MEDIA_CARD_URL,
@@ -47,6 +44,11 @@ import {
   UPDATE_STORE_CATALOG_IMAGE_URL,
   REMOVE_STORE_CATALOG_IMAGE_URL,
   REMOVE_STORE_CATALOG_BY_ID_URL,
+  GET_BIDS_LIST_URL,
+  GET_BIDS_CHART_URL,
+  GET_PAYMENT_LIST_URL,
+  UPDATE_PAYMENT_STATUS_URL,
+  LOGIN_OUT,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -76,29 +78,60 @@ const apiService = {
       handleFailure(err);
     }
   },
-  getStoreManagementList: async () => {
+  getBidsList: async (startDate, endDate) => {
     try {
-      const response = await httpService.get(GET_STORE_MANAGEMENT_LIST_URL);
+      let url = GET_BIDS_LIST_URL;
+      if (startDate) {
+        url = `${url}?startDate=${startDate}`;
+      }
+      if (endDate) {
+        url = `${url}&endDate=${endDate}`;
+      }
+      // const url = `${GET_BIDS_LIST_URL}?startDate=${startDate}&endDate=${endDate}`;
+      const response = await httpService.get(url);
       return response.data;
     } catch (err) {
       handleFailure(err);
     }
   },
-  getMediaVerseList: async () => {
+  getBidsChart: async (startDate, endDate) => {
     try {
-      const response = await httpService.get(GET_MEDIA_VERSE_LIST_URL);
+      let url = GET_BIDS_CHART_URL;
+      if (startDate) {
+        url = `${url}?startDate=${startDate}`;
+      }
+      if (endDate) {
+        url = `${url}&endDate=${endDate}`;
+      }
+      const response = await httpService.get(url);
       return response.data;
     } catch (err) {
       handleFailure(err);
     }
   },
-  updateUserStatus: async (payload) => {
+  getAllPayment: async () => {
     try {
-      const url = UPDATE_USER_STATUS_URL + payload.id;
+      const response = await httpService.get(GET_PAYMENT_LIST_URL);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  updatePaymentStatus: async (paymentId) => {
+    try {
+      const url = UPDATE_PAYMENT_STATUS_URL;
       const data = {
-        status: +payload.status,
+        paymentId,
       };
-      const response = await httpService.put(url, data);
+      const response = await httpService.post(url, data);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  logout: async () => {
+    try {
+      const response = await httpService.post(LOGIN_OUT);
       return response.data;
     } catch (err) {
       handleFailure(err);
@@ -519,11 +552,10 @@ const apiService = {
   updateAdminDetails: async (payload) => {
     try {
       const updatedPayload = {
-        name: payload?.name,
-        address: payload?.address,
-        dob: payload?.dob,
+        fullName: payload?.fullName,
       };
-      const response = await httpService.put(ADMIN_EDIT_DETAILS_URL + payload?.id, updatedPayload);
+      const url = payload?.id ? `${ADMIN_EDIT_DETAILS_URL}?id=${payload?.id}` : ADMIN_EDIT_DETAILS_URL;
+      const response = await httpService.patch(url, updatedPayload);
       return response.data;
     } catch (err) {
       handleFailure(err);

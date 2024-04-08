@@ -27,9 +27,7 @@ const reducer = (state, action) => {
         ...state,
         userData: {
           ...state.userData,
-          name: action.payload.name,
-          address: action.payload.address,
-          dob: action.payload.dob,
+          fullName: action.payload.fullName,
         },
       };
     }

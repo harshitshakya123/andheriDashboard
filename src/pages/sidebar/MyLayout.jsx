@@ -33,7 +33,7 @@ const MyLayout = ({ userRole, signedIn, children }) => {
     { label: t("dashboard"), key: "dashboard", icon: <PieChartOutlined /> },
     { label: t("user.manage"), key: "userManage", icon: <UserOutlined /> },
     { label: t("bids.manage"), key: "bidsManage", icon: <AppstoreOutlined /> },
-    // { label: t("payment.manage"), key: "paymentManage", icon: <FundOutlined /> },
+    { label: t("payment.manage"), key: "paymentManage", icon: <FundOutlined /> },
     // { label: t("media.manage"), key: "mediaVerseManage", icon: <HeatMapOutlined /> },
     // { label: t("sns.manage"), key: "snsManage", icon: <BarChartOutlined /> },
     // { label: t("ad.manage"), key: "adsManage", icon: <ReadOutlined /> },
@@ -59,6 +59,7 @@ const MyLayout = ({ userRole, signedIn, children }) => {
 
     return filteredItems;
   }
+  console.log("userRole", userRole);
   const roleBaseSidebar = userRole?.length && getManagerMenuItems(userRole);
 
   const { token } = theme.useToken();

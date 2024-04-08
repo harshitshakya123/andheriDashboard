@@ -111,3 +111,8 @@ div::-webkit-scrollbar-button {
   height: 250px;
   width: 345px;
 }
+
+.ant-table {
+  height: 65vh;
+  overflow: hidden;
+}

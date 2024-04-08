@@ -1,5 +1,5 @@
 import { Button, Form, Input, message } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useState } from "react";
 import commonService from "../services/commonServices";
@@ -13,22 +13,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (values) => {
-    values.user_type = 1;
+    console.log(values);
+    // values.user_type = 1;
     setLoading(true);
     const data = await commonService.login(values);
-    if (data?.token?.length) {
+    console.log(data?.data);
+    if (data?.data?.accessToken) {
       dispatchUserProfile({
         type: "ADD_USER_DATA",
-        payload: data?.data[0],
+        payload: data?.data?.user,
       });
-      localStorage.setItem("token", JSON.stringify(data?.token));
-      localStorage.setItem("userData", JSON.stringify(data?.data[0]));
+      localStorage.setItem("token", JSON.stringify(data?.data?.accessToken));
+      localStorage.setItem("userData", JSON.stringify(data?.data?.user));
       navigate("/sidebar/dashboard");
       message.success("User Login Successfully");
     }
-    if (!data?.status) {
-      message.error(data?.message);
-    }
+    // if (!data?.status) {
+    //   message.error(data?.message);
+    // }
     setLoading(false);
   };
 
@@ -45,15 +47,15 @@ const Login = () => {
         >
           <h1 style={{ textAlign: "center" }}>Login</h1>
           <Form.Item
-            name="email"
+            name="phone"
             rules={[
               {
                 required: true,
-                message: "Please input your email!",
+                message: "Please input your Phone number!",
               },
             ]}
           >
-            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
+            <Input prefix={<PhoneOutlined className="site-form-item-icon" />} placeholder="Phone Number" />
           </Form.Item>
           <Form.Item
             name="password"
