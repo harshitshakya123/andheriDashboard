@@ -49,6 +49,7 @@ import {
   GET_PAYMENT_LIST_URL,
   UPDATE_PAYMENT_STATUS_URL,
   LOGIN_OUT,
+  ADD_BID_URL,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -556,6 +557,14 @@ const apiService = {
       };
       const url = payload?.id ? `${ADMIN_EDIT_DETAILS_URL}?id=${payload?.id}` : ADMIN_EDIT_DETAILS_URL;
       const response = await httpService.patch(url, updatedPayload);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  addBid: async (payload) => {
+    try {
+      const response = await httpService.post(ADD_BID_URL, payload);
       return response.data;
     } catch (err) {
       handleFailure(err);

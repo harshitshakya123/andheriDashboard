@@ -15,6 +15,7 @@ export const ADMIN_EDIT_DETAILS_URL = `api/v1/users/edit-user`;
 export const GET_BIDS_LIST_URL = `api/v1/bids/get`;
 export const GET_BIDS_CHART_URL = `api/v1/bids/bids-chart`;
 export const UPDATE_PAYMENT_STATUS_URL = `api/v1/payment/approve`;
+export const ADD_BID_URL = `api/v1/bids/add`;
 
 //payment
 export const GET_PAYMENT_LIST_URL = `api/v1/payment/get`;

@@ -1,14 +1,16 @@
-import { Tag, Tabs, Button, DatePicker } from "antd";
+import { Tag, Tabs, Button, DatePicker, Modal, InputNumber, Select } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import CustomTable from "../../components/CustomTable";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import styled from "styled-components";
 const { RangePicker } = DatePicker;
 const BidsManagement = () => {
   const [userBids, setUserBids] = useState([]);
   const [bidsChart, setBidsChart] = useState([]);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchList();
@@ -158,7 +160,7 @@ const BidsManagement = () => {
       key: "3",
       // width: 80,
       // searchable: true,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
     },
   ];
   const fetchList = async (startDate, endDate) => {
@@ -172,13 +174,20 @@ const BidsManagement = () => {
 
   const [activeTab, setActiveTab] = useState("1");
   const operations = (
-    <RangePicker
-      onChange={(e, d) => {
-        if (activeTab == 2) fetchList(d[0], d[1]);
-        else fetchChart(d[0], d[1]);
-      }}
-      format={"YYYY-MM-DD"}
-    />
+    <div>
+      {activeTab === "2" && (
+        <Button style={{ marginRight: "10px" }} type="primary" onClick={() => setIsModalOpen(true)}>
+          Add Bid
+        </Button>
+      )}
+      <RangePicker
+        onChange={(e, d) => {
+          if (activeTab == 2) fetchList(d[0], d[1]);
+          else fetchChart(d[0], d[1]);
+        }}
+        format={"YYYY-MM-DD"}
+      />
+    </div>
   );
   return (
     <>
@@ -218,8 +227,141 @@ const BidsManagement = () => {
           },
         ]}
       />
+      <MyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} fetchList={fetchList} />
     </>
   );
 };
 
 export default BidsManagement;
+
+const MyModal = ({ isModalOpen, setIsModalOpen, fetchList }) => {
+  const [editLoading, setEditLoading] = useState(false);
+  const [editFormData, setEditFormData] = useState("");
+  const [userData, setUserData] = useState([]);
+
+  useEffect(() => {
+    fetch();
+  }, []);
+  console.log("userData", userData);
+  const fetch = async () => {
+    const response = await apiService.getUserList();
+    setUserData(response?.data?.map((item) => ({ key: item?._id, label: item?.fullName, value: item?._id })));
+  };
+
+  const handleAdd = async (payload) => {
+    setEditLoading(true);
+    await apiService.addBid(payload);
+    fetchList();
+
+    setEditLoading(false);
+    setIsModalOpen(false);
+  };
+
+  return (
+    <CustomModal
+      title="Add Bid"
+      open={isModalOpen}
+      onCancel={() => {
+        // setEditData(null);
+        setIsModalOpen(null);
+      }}
+      footer={[
+        <Button
+          key="back"
+          onClick={() => {
+            // setEditData(null);
+            setIsModalOpen(null);
+          }}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          loading={editLoading}
+          onClick={() => {
+            handleAdd(editFormData);
+          }}
+        >
+          {editLoading ? "Adding..." : "Add"}
+        </Button>,
+      ]}
+    >
+      <div>
+        <div style={{ display: "flex", gap: "10px", marginBottom: 10 }}>
+          <div>
+            <label>Type</label>
+            <div>
+              <Select
+                placeholder="Select Type"
+                // defaultValue="lucy"
+                style={{
+                  width: 120,
+                }}
+                onChange={(e) => setEditFormData((prev) => ({ ...prev, type: e }))}
+                options={[
+                  {
+                    value: "2x",
+                    label: "2x",
+                  },
+                  {
+                    value: "100x",
+                    label: "100x",
+                  },
+                ]}
+              />
+            </div>
+          </div>
+          <div>
+            <label>Users</label>
+            <div>
+              <Select
+                placeholder="Select User"
+                // defaultValue="lucy"
+                style={{
+                  width: 120,
+                }}
+                // onChange={(e, d) => console.log(e, d)}
+                onChange={(e) => setEditFormData((prev) => ({ ...prev, id: e }))}
+                options={userData}
+              />
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <div>
+            <label>Bid Amount</label>
+            <div>
+              <InputNumber
+                // min={editFormData?.type === "2x" ? 1 : 0}
+                // max={editFormData?.type === "2x" ? 2 : 99}
+                onChange={(e) => {
+                  console.log(e);
+                  setEditFormData((prev) => ({ ...prev, bidAmount: e }));
+                }}
+              />
+            </div>
+          </div>
+          <div>
+            <label>Bid Number</label>
+            <div>
+              <InputNumber
+                min={editFormData?.type === "2x" ? 1 : 0}
+                max={editFormData?.type === "2x" ? 2 : 99}
+                onChange={(e) => {
+                  console.log(e);
+                  setEditFormData((prev) => ({ ...prev, number: e }));
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </CustomModal>
+  );
+};
+const CustomModal = styled(Modal)`
+  .ant-form-item {
+    margin-bottom: 10px !important;
+  }
+`;

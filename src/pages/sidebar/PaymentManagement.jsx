@@ -9,6 +9,7 @@ const PaymentManagement = () => {
   const [paymentList, setPaymentList] = useState([]);
   const [creditList, setCreditList] = useState([]);
   const [withdrawList, setWithdrawList] = useState([]);
+  const [activeTab, setActiveTab] = useState("1");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +21,16 @@ const PaymentManagement = () => {
 
     message.success("User Status Updated successfully");
   };
-
+  const statusFilters = [
+    {
+      text: "Approved",
+      value: "approved",
+    },
+    {
+      text: "Pending",
+      value: "pending",
+    },
+  ];
   const storeColumns = [
     {
       title: "Phone Number",
@@ -65,7 +75,7 @@ const PaymentManagement = () => {
     {
       title: "Status",
       dataIndex: "status",
-      key: "3",
+      key: "status",
       width: 80,
       // searchable: true,
       render: (_, { _id, status }) => {
@@ -80,17 +90,20 @@ const PaymentManagement = () => {
           </div>
         );
       },
-      filters: [
-        {
-          text: "Approved",
-          value: "London",
-        },
-        {
-          text: "Pending",
-          value: "New York",
-        },
-      ],
-      onFilter: (value, record) => record.address.indexOf(value) === 0,
+      filters: activeTab === "1" ? statusFilters : null,
+      // filters: [
+      //   {
+      //     text: "Approved",
+      //     value: "London",
+      //   },
+      //   {
+      //     text: "Pending",
+      //     value: "New York",
+      //   },
+      // ],
+      // onFilter: (value, record) => record.address.indexOf(value) === 0,
+      onFilter: (value, record) => record.status.toLowerCase() === value,
+      // onFilter: (value, record) => console.log("hello", value, record),
     },
     {
       title: "Date",
@@ -108,8 +121,6 @@ const PaymentManagement = () => {
     setCreditList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "credit"));
     setWithdrawList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "withdraw"));
   };
-
-  const [activeTab, setActiveTab] = useState("1");
 
   return (
     // <>

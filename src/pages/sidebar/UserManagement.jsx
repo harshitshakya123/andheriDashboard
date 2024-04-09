@@ -59,7 +59,7 @@ const UserManagement = () => {
       dataIndex: "createdAt",
       key: "9",
       // width: 80,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
     },
     {
       title: t("user.status"),
