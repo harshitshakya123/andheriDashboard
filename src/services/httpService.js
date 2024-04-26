@@ -1,6 +1,11 @@
 import axios from "axios";
-// const BASE_URL = "http://api.andherisupersatta.com";
-const BASE_URL = "http://localhost:8000";
+let BASE_URL = "";
+
+if (window.location.hostname === "localhost") {
+  BASE_URL = "http://localhost:8000";
+} else {
+  BASE_URL = "http://api.andherisupersatta.com";
+}
 
 const httpService = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || BASE_URL,
