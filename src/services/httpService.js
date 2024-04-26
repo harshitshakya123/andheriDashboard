@@ -6,6 +6,7 @@ if (window.location.hostname === "localhost") {
 } else {
   BASE_URL = "http://api.andherisupersatta.com";
 }
+console.log("BASE_URL", BASE_URL, window.location.hostname);
 
 const httpService = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || BASE_URL,
