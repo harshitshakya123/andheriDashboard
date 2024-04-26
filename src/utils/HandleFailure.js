@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { errorMessage } from "../utils/constant";
+import { errorMessage } from "./constant";
 
 export const handleFailure = async (err) => {
   const errorRes = err.response;
