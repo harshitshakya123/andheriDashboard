@@ -4,7 +4,7 @@ const userProfileContext = createContext(null);
 
 const initialVal = {
   userData: {
-    role: ["Super Admin"],
+    // role: [],
   },
   signedIn: false,
   theme: "#1677FF",

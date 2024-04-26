@@ -1,5 +1,5 @@
 import { Button, Form, Input, Select, message } from "antd";
-import { LockOutlined, UserOutlined, MailOutlined, GlobalOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useState } from "react";
 import commonService from "../services/commonServices";
@@ -12,24 +12,21 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (values) => {
-    values.user_type = 1;
-    console.log(values);
     setLoading(true);
     console.log(values);
     const payload = {
-      name: values?.name,
-      address: values?.address,
-      email: values?.email,
-      phone_number: `${values?.prefix || "+81"} ${values?.phone}`,
+      fullName: values?.fullName,
+      phone: values?.phone,
       password: values?.password,
     };
     const data = await commonService.adminRegister(payload);
-    if (data?.status) {
+    console.log("registerData", data);
+    if (data?.success) {
       navigate("/login");
-      message.success("Register Successfully!! Please wait for admin approval");
+      message.success("Register Successfully!!");
     }
 
-    if (!data?.status) {
+    if (!data?.success) {
       message.error(data?.message);
     }
     setLoading(false);
@@ -41,8 +38,8 @@ const Register = () => {
           width: 70,
         }}
       >
-        <Option value="+81">+81</Option>
-        <Option value="+01">+01</Option>
+        <Option value="+81">+91</Option>
+        {/* <Option value="+01">+01</Option> */}
       </Select>
     </Form.Item>
   );
@@ -60,7 +57,7 @@ const Register = () => {
         >
           <h1 style={{ textAlign: "center" }}>Register</h1>
           <Form.Item
-            name="name"
+            name="fullName"
             id="name"
             rules={[
               {
@@ -76,29 +73,7 @@ const Register = () => {
               placeholder="Name"
             />
           </Form.Item>
-          <Form.Item
-            name="email"
-            rules={[
-              {
-                type: "email",
-                required: true,
-                message: "Please input your email!",
-              },
-            ]}
-          >
-            <Input type="email" prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
-          </Form.Item>
-          <Form.Item
-            name="address"
-            rules={[
-              {
-                required: true,
-                message: "Please input your address!",
-              },
-            ]}
-          >
-            <Input prefix={<GlobalOutlined className="site-form-item-icon" />} placeholder="Address" />
-          </Form.Item>
+
           <Form.Item
             name="phone"
             rules={[
@@ -108,6 +83,7 @@ const Register = () => {
               },
               {
                 max: 10,
+                min: 10,
                 message: "Phone number must not exceed 10 characters!",
               },
             ]}

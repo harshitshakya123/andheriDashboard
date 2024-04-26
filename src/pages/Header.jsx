@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { UserProfileContext } from "../store/UserProfileStore";
 import { useTranslation } from "react-i18next";
-import US from "../assets/us.jpg";
-import JP from "../assets/japan.png";
+// import US from "../assets/us.jpg";
+// import JP from "../assets/japan.png";
 import { constantColor } from "../utils/constant";
 import apiService from "../services/apiServices";
+import logo from "../assets/andheriLogo.jpeg";
 const Header = () => {
   const navigate = useNavigate();
   const [userProfileC, dispatchUserProfile] = UserProfileContext();
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
 
   // const handleChangeLang = (lang) => {
   //   i18n.changeLanguage(lang?.key);
@@ -76,7 +77,10 @@ const Header = () => {
 
   return (
     <Container>
-      <div className="logo">Andheri</div>
+      <div className="logo">
+        <img src={logo} style={{ width: "51px", borderRadius: "50%", marginRight: "10px" }} />
+        Andheri
+      </div>
 
       <div className="right-menu">
         <div className="color-picker">

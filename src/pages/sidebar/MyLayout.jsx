@@ -1,18 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  FileOutlined,
-  PieChartOutlined,
-  ControlOutlined,
-  UserOutlined,
-  AppstoreOutlined,
-  FundOutlined,
-  BarChartOutlined,
-  ReadOutlined,
-  MessageOutlined,
-  DollarOutlined,
-  HeatMapOutlined,
-  BellOutlined,
-} from "@ant-design/icons";
+import { PieChartOutlined, UserOutlined, AppstoreOutlined, FundOutlined } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 const { Sider, Header, Content } = Layout;

@@ -30,6 +30,7 @@ export const MAX_VIDEO_SIZE_MB = 50;
 export const errorMessage = {
   500: "Internal server error",
   404: "Not found",
+  402: "You are not authorized to perform this action",
   400: "Bad Request",
   408: "API Reached Request Timeout limit",
 };

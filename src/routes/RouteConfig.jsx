@@ -2,13 +2,9 @@ import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Sidebar from "../pages/sidebar/Sidebar";
 import Login from "../pages/Login";
 import Error from "../components/Error";
-import LeaderBoard from "../pages/sidebar/Leaderboard";
-import Gameboard from "../pages/sidebar/Gameboard";
 import UserDetail from "../pages/sidebar/UserDetail";
 import Register from "../pages/Register";
 import EditProfile from "../pages/EditProfile";
-import StoreDetails from "../pages/sidebar/StoreDetails";
-import WalletDetails from "../pages/sidebar/WalletDetails";
 import ForgotPassword from "../pages/ForgotPassword";
 import MyLayout from "../pages/sidebar/MyLayout";
 import { ConfigProvider } from "antd";
@@ -42,11 +38,7 @@ const RouteConfig = ({ userRole, signedIn }) => {
           <Route element={<PrivateRoutes signedIn={signedIn} />}>
             <Route path="/sidebar" element={<Sidebar />}>
               <Route path=":path" element={<Sidebar />}>
-                <Route path="leaderBoard" element={<LeaderBoard />} />
-                <Route path="gameBoard" element={<Gameboard />} />
                 <Route path="userDetails" element={<UserDetail />} />
-                <Route path="storeDetails" element={<StoreDetails />} />
-                <Route path="walletDetails" element={<WalletDetails />} />
               </Route>
             </Route>
             <Route path="editProfile" element={<EditProfile />} />

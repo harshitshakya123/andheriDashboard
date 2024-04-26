@@ -49,7 +49,7 @@ const UserManagement = () => {
       render: (_, { role }) => {
         return (
           <div style={{ cursor: "pointer" }}>
-            <Tag color={role == "admin" ? "geekblue" : "orange"}>{role.toUpperCase()}</Tag>
+            <Tag color={role == "admin" ? "geekblue" : "orange"}>{role?.toUpperCase()}</Tag>
           </div>
         );
       },
@@ -66,7 +66,7 @@ const UserManagement = () => {
       key: "status",
       dataIndex: "status",
       // width: 80,
-      render: (_, { status, id }) => {
+      render: (_, { status }) => {
         return (
           <div style={{ cursor: "pointer" }}>
             <Tag color={+status ? "geekblue" : "green"}>{+status ? "Inactive" : "Active"}</Tag>

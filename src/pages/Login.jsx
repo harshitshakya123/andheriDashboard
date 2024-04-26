@@ -13,8 +13,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (values) => {
-    console.log(values);
-    // values.user_type = 1;
     setLoading(true);
     const data = await commonService.login(values);
     console.log(data?.data);
@@ -52,6 +50,11 @@ const Login = () => {
               {
                 required: true,
                 message: "Please input your Phone number!",
+              },
+              {
+                max: 10,
+                min: 10,
+                message: "Phone number must not exceed 10 characters!",
               },
             ]}
           >
