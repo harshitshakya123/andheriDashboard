@@ -1,4 +1,18 @@
-import { Avatar, Button, Image, Modal, Spin, Tabs, Tag, Typography, Upload, message } from "antd";
+import {
+  Avatar,
+  Button,
+  Collapse,
+  Form,
+  Image,
+  Input,
+  Modal,
+  Spin,
+  Tabs,
+  Tag,
+  Typography,
+  Upload,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import { LeftOutlined } from "@ant-design/icons";
@@ -18,11 +32,13 @@ import CustomTable from "../../components/CustomTable";
 // import { useTranslation } from "react-i18next";
 import { MAX_IMAGE_FILE_SIZE_MB, emptyImage } from "../../utils/constant";
 import moment from "moment";
+import commonService from "../../services/commonServices";
 
 const { confirm } = Modal;
 
 const UserDetail = () => {
   // const [t] = useTranslation("global");
+  const [form] = Form.useForm();
 
   const [userDetails, setUserDetails] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -30,6 +46,7 @@ const UserDetail = () => {
   const [loading, setLoading] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("1");
+  const [passLoading, setPassLoading] = useState(false);
 
   const navigate = useNavigate();
   const { path } = useParams();
@@ -242,7 +259,6 @@ const UserDetail = () => {
   const handleImageUpload = (info) => {
     // const file = info.file.originFileObj;
     const file = info.file;
-    console.log("handleChange", info.file.status, info);
     if (file) {
       const fileSizeInMB = file.size / (1024 * 1024); // Convert bytes to MB
       if (fileSizeInMB > MAX_IMAGE_FILE_SIZE_MB) {
@@ -288,7 +304,19 @@ const UserDetail = () => {
       },
     });
   };
-
+  const handleResetPass = async (e) => {
+    setPassLoading(true);
+    const updatePayload = {
+      newPassword: e.password,
+      id: path,
+    };
+    const resp = await commonService.userChangePassword(updatePayload);
+    if (resp?.success) {
+      message.success("Password updated successfully");
+      form.resetFields();
+    }
+    setPassLoading(false);
+  };
   return (
     <>
       <Button style={{ marginBottom: 6 }} icon={<LeftOutlined />} type="link" onClick={() => navigate(-1)}>
@@ -391,6 +419,57 @@ const UserDetail = () => {
                 )}
               </div>
             </div>
+          </div>
+          <div style={{ margin: "20px 0px" }}>
+            <Collapse
+              items={[
+                {
+                  key: "1",
+                  label: "Change Password",
+                  children: (
+                    <Form
+                      onFinish={(values) => handleResetPass({ ...values })}
+                      form={form}
+                      name="dependencies"
+                      autoComplete="off"
+                      style={{ maxWidth: 600 }}
+                      layout="vertical"
+                    >
+                      <Form.Item label="New Password" name="password" rules={[{ required: true }]}>
+                        <Input />
+                      </Form.Item>
+
+                      {/* Field */}
+                      <Form.Item
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        dependencies={["password"]}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (!value || getFieldValue("password") === value) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(new Error("The new password that you entered do not match!"));
+                            },
+                          }),
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item>
+                        <Button loading={passLoading} type="primary" htmlType="submit" className="login-form-button">
+                          Change Password
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  ),
+                },
+              ]}
+            />
           </div>
           <div className="follow-table">
             <Tabs

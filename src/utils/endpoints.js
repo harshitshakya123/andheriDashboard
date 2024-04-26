@@ -9,6 +9,7 @@ export const ADMIN_EDIT_DETAILS_URL = `api/v1/users/edit-user`;
 export const CREATE_ADMIN_USER_URL = `/api/v1/users/register`;
 export const FORGOT_PASSWORD_URL = `/admin/forget-password?email=`;
 export const RESET_PASSWORD_URL = `/admin/reset-password`;
+export const USER_CHANGE_PASSWORD_URL = `/api/v1/users/admin-change-password`;
 
 //bids
 export const GET_BIDS_LIST_URL = `api/v1/bids/get`;

@@ -22,7 +22,7 @@ const BidsManagement = () => {
       title: "Date",
       dataIndex: "createdAt",
       key: "3",
-      width: 80,
+      width: 100,
       // searchable: true,
       render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
     },

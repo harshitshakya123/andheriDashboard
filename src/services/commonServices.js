@@ -5,6 +5,7 @@ import {
   GET_DASHBOARD_LIST_URL,
   LOGIN_URL,
   RESET_PASSWORD_URL,
+  USER_CHANGE_PASSWORD_URL,
 } from "../utils/endpoints";
 import httpService from "./httpService";
 
@@ -45,6 +46,14 @@ const commonService = {
   resetPassword: async (payload) => {
     try {
       const response = await httpService.post(RESET_PASSWORD_URL, payload);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  userChangePassword: async (payload) => {
+    try {
+      const response = await httpService.post(USER_CHANGE_PASSWORD_URL, payload);
       return response.data;
     } catch (err) {
       handleFailure(err);
