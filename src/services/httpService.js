@@ -4,7 +4,7 @@ let BASE_URL = "";
 if (window.location.hostname === "localhost") {
   BASE_URL = "http://localhost:8000";
 } else {
-  BASE_URL = "http://api.andherisupersatta.com";
+  BASE_URL = "https://api.andherisupersatta.com";
 }
 console.log("BASE_URL", BASE_URL, window.location.hostname);
 
