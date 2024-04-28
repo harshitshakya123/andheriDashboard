@@ -2,7 +2,8 @@ import axios from "axios";
 let BASE_URL = "";
 
 if (window.location.hostname === "localhost") {
-  BASE_URL = "http://localhost:8000";
+  // BASE_URL = "http://localhost:8000";
+  BASE_URL = "https://api.andherisupersatta.com";
 } else {
   BASE_URL = "https://api.andherisupersatta.com";
 }

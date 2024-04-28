@@ -9,6 +9,7 @@ import {
   UPDATE_PAYMENT_STATUS_URL,
   LOGIN_OUT,
   ADD_BID_URL,
+  APPROVE_PAYMENT_URL,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -64,6 +65,18 @@ const apiService = {
   updatePaymentStatus: async (paymentId) => {
     try {
       const url = UPDATE_PAYMENT_STATUS_URL;
+      const data = {
+        paymentId,
+      };
+      const response = await httpService.post(url, data);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  approvePayment: async (paymentId) => {
+    try {
+      const url = APPROVE_PAYMENT_URL;
       const data = {
         paymentId,
       };

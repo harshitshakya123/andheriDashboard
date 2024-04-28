@@ -19,3 +19,4 @@ export const ADD_BID_URL = `api/v1/bids/add`;
 
 //payment
 export const GET_PAYMENT_LIST_URL = `api/v1/payment/get`;
+export const APPROVE_PAYMENT_URL = `api/v1/payment/approve`;

@@ -33,6 +33,7 @@ export const errorMessage = {
   402: "You are not authorized to perform this action",
   400: "Bad Request",
   408: "API Reached Request Timeout limit",
+  409: "User already exists",
 };
 
 export const constantColor = {
