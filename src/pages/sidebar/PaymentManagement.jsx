@@ -24,6 +24,7 @@ const PaymentManagement = () => {
   const handleApprove = async (id) => {
     await apiService.approvePayment(id);
 
+    fetchList();
     message.success("Payment Approved successfully");
   };
   const statusFilters = [
@@ -116,7 +117,7 @@ const PaymentManagement = () => {
       key: "1",
       width: 100,
       // searchable: true,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
     },
   ];
   const paymentColumns = [
@@ -199,7 +200,7 @@ const PaymentManagement = () => {
       key: "1",
       width: 80,
       // searchable: true,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
     },
     {
       title: "Action",

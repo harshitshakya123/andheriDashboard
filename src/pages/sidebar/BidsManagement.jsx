@@ -76,14 +76,6 @@ const BidsManagement = () => {
     },
     {
       title: "09:00 PM(2x)",
-      dataIndex: "nineteen",
-      key: "5",
-      width: 100,
-      // searchable: true,
-      render: (_, { nineteen }) => (nineteen ? nineteen : "---"),
-    },
-    {
-      title: "09:00 PM(2x)",
       dataIndex: "twentyone",
       key: "5",
       width: 100,
