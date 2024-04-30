@@ -217,7 +217,9 @@ const PaymentManagement = () => {
   const fetchList = async () => {
     const storeResponse = await apiService.getAllPayment();
 
-    setPaymentList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "approved"));
+    setPaymentList(
+      storeResponse?.data.filter((item) => ["approved", "won", "lost"].includes(item?.status?.toLowerCase()))
+    );
     setCreditList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "credit"));
     setWithdrawList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "withdraw"));
   };
