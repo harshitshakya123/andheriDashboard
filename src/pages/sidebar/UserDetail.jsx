@@ -1,40 +1,18 @@
-import {
-  Avatar,
-  Button,
-  Collapse,
-  Form,
-  Image,
-  Input,
-  Modal,
-  Spin,
-  Tabs,
-  Tag,
-  Typography,
-  Upload,
-  message,
-} from "antd";
+import { Button, Collapse, Form, Image, Input, Spin, Tabs, Tag, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 const { Paragraph } = Typography;
-import {
-  InstagramOutlined,
-  FacebookOutlined,
-  FilePdfOutlined,
-  TwitterOutlined,
-  UploadOutlined,
-  DeleteOutlined,
-  ExclamationCircleFilled,
-} from "@ant-design/icons";
+import { InstagramOutlined, FacebookOutlined, FilePdfOutlined, TwitterOutlined } from "@ant-design/icons";
 import CustomTable from "../../components/CustomTable";
 // import { useTranslation } from "react-i18next";
 import { MAX_IMAGE_FILE_SIZE_MB, emptyImage } from "../../utils/constant";
 import moment from "moment";
 import commonService from "../../services/commonServices";
 
-const { confirm } = Modal;
+// const { confirm } = Modal;
 
 const UserDetail = () => {
   // const [t] = useTranslation("global");
@@ -65,10 +43,6 @@ const UserDetail = () => {
   };
   const fetchFollow = async () => {
     setFollowLoading(true);
-    // const followersResponse = await apiService.getUserFollowers(path, "user");
-    // const followingResponse = await apiService.getUserFollowing(path, "user");
-    // setFollowers(followersResponse?.data);
-    // setFollowing(followingResponse?.data);
     setFollowLoading(false);
   };
   const handleSocial = (url) => {
@@ -94,34 +68,7 @@ const UserDetail = () => {
 
     return renderSocialIcon();
   };
-  const followColumns = [
-    {
-      title: "Profile",
-      width: 70,
-      dataIndex: "profile_picture_url",
-      key: "profile_picture_url",
-      fixed: "left",
-      render: (text, data) => (
-        <>
-          <Avatar
-            style={{
-              backgroundColor: "#f56a00",
-              verticalAlign: "middle",
-            }}
-            src={
-              data?.profile_picture_url?.trim()?.length
-                ? data?.profile_picture_url
-                : "https://xsgames.co/randomusers/avatar.php?g=pixel&key=1"
-            }
-            size="large"
-            gap={4}
-          >
-            {data?.first_name?.charAt(0).toUpperCase()}
-          </Avatar>
-        </>
-      ),
-    },
-
+  const bidsColumns = [
     {
       title: "Game",
       dataIndex: "type",
@@ -141,7 +88,8 @@ const UserDetail = () => {
       dataIndex: "bidAmount",
       key: "3",
       width: 80,
-      searchable: true,
+      // searchable: true,
+      render: (_, { bidAmount }) => <Tag color={"gold"}>{`${bidAmount} Rs.`}</Tag>,
     },
     // {
     //   title: "Winning Status",
@@ -155,7 +103,9 @@ const UserDetail = () => {
       dataIndex: "bidAmount",
       key: "6",
       width: 80,
-      render: (_, { bidAmount }) => bidAmount * 2,
+      // render: (_, { bidAmount }) => bidAmount * 2,
+      render: (_, { bidAmount }) => <Tag color={"orange"}>{`${bidAmount} Rs.`}</Tag>,
+
       // searchable: true,
     },
 
@@ -199,7 +149,8 @@ const UserDetail = () => {
       dataIndex: "userAmount",
       key: "1",
       width: 100,
-      searchable: true,
+      // searchable: true,
+      render: (_, { userAmount }) => <Tag color={"gold"}>{`${userAmount} Rs.`}</Tag>,
     },
 
     {
@@ -217,7 +168,17 @@ const UserDetail = () => {
       render: (_, { status }) => {
         return (
           <div style={{ cursor: "pointer" }}>
-            <Tag onClick={() => {}} color={status === "Approved" ? "green" : "blue"}>
+            <Tag
+              color={
+                status.toLowerCase() === "credited"
+                  ? "gold"
+                  : status.toLowerCase() === "won"
+                  ? "green"
+                  : status.toLowerCase() === "lost"
+                  ? "red"
+                  : "blue"
+              }
+            >
               {status.toUpperCase()}
             </Tag>
           </div>
@@ -239,7 +200,7 @@ const UserDetail = () => {
       key: "1",
       label: "My Bids",
       children: (
-        <CustomTable columns={followColumns} dataList={followers} loading={loading} scrollY={"calc(100% - 55px)"} />
+        <CustomTable columns={bidsColumns} dataList={followers} loading={loading} scrollY={"calc(100% - 55px)"} />
       ),
     },
     {

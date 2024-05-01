@@ -37,7 +37,7 @@ const PaymentManagement = () => {
       value: "pending",
     },
   ];
-  const storeColumns = [
+  const paymentColumns = [
     {
       title: "Phone Number",
       width: 70,
@@ -66,11 +66,11 @@ const PaymentManagement = () => {
       key: "2",
       width: 100,
       // searchable: true,
-      render: (_, { attachment }) =>
-        attachment === "won" ? (
-          "---"
-        ) : (
+      render: (_, { status }) =>
+        status === "credited" ? (
           <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+        ) : (
+          "---"
         ),
     },
 
@@ -79,7 +79,8 @@ const PaymentManagement = () => {
       dataIndex: "userAmount",
       key: "3",
       width: 80,
-      searchable: true,
+      // searchable: true,
+      render: (_, { userAmount }) => <Tag color={"gold"}>{`${userAmount} Rs.`}</Tag>,
     },
     {
       title: "Status",
@@ -92,7 +93,15 @@ const PaymentManagement = () => {
           <div style={{ cursor: "pointer" }}>
             <Tag
               onClick={() => status.toLowerCase() === "credit" && handleUpdateStatus(_id)}
-              color={status.toLowerCase() === "approved" ? "green" : status === "credit" ? "orange" : "blue"}
+              color={
+                status.toLowerCase() === "credited"
+                  ? "gold"
+                  : status.toLowerCase() === "won"
+                  ? "green"
+                  : status.toLowerCase() === "lost"
+                  ? "red"
+                  : "blue"
+              }
             >
               {status.toUpperCase()}
             </Tag>
@@ -123,7 +132,7 @@ const PaymentManagement = () => {
       render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm:ss a"),
     },
   ];
-  const withdrawColumns = [
+  const debitColumns = [
     {
       title: "Phone Number",
       width: 70,
@@ -162,7 +171,12 @@ const PaymentManagement = () => {
       dataIndex: "userAmount",
       key: "3",
       width: 80,
-      searchable: true,
+      // searchable: true,
+      render: (_, { userAmount, type }) => (
+        <Tag onClick={() => {}} color={"gold"}>
+          {`${userAmount} Rs.`}
+        </Tag>
+      ),
     },
     {
       title: "Reason",
@@ -213,16 +227,14 @@ const PaymentManagement = () => {
       render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm:ss a"),
     },
   ];
-  const paymentColumns = [
+  const requestColumns = [
     {
       title: "Phone Number",
       width: 70,
       dataIndex: "userData",
       key: "userId",
       fixed: "left",
-      render: (text, record) => (
-        <a onClick={() => navigate(`${record.userId}/userDetails`)}>{record?.userData?.phone}</a>
-      ),
+      render: (_, record) => <a onClick={() => navigate(`${record.userId}/userDetails`)}>{record?.userData?.phone}</a>,
       // searchable: true,
     },
     {
@@ -236,23 +248,40 @@ const PaymentManagement = () => {
       ),
       // searchable: true,
     },
+
+    {
+      title: "User Amount",
+      dataIndex: "userData2",
+      key: "3",
+      width: 80,
+      // searchable: true,
+      render: (_, record) => <Tag color={"green"}>{`${record?.userData?.amount} Rs.`}</Tag>,
+    },
     {
       title: "Attachment",
       dataIndex: "attachment",
       key: "2",
-      width: 100,
+      width: 80,
       // searchable: true,
-      render: (_, { attachment }) => (
-        <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-      ),
+      render: (_, { attachment, status }) =>
+        status.toLowerCase() === "withdraw" ? (
+          "---"
+        ) : (
+          <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+        ),
     },
 
     {
-      title: "Amount",
+      title: "Request Amount",
       dataIndex: "userAmount",
       key: "3",
       width: 80,
-      searchable: true,
+      // searchable: true,
+      render: (_, { userAmount }) => (
+        <Tag onClick={() => {}} color={"gold"}>
+          {`${userAmount} Rs.`}
+        </Tag>
+      ),
     },
     {
       title: "Status",
@@ -272,7 +301,7 @@ const PaymentManagement = () => {
           </div>
         );
       },
-      filters: activeTab === "1" ? statusFilters : null,
+      // filters: activeTab === "1" ? statusFilters : null,
       // filters: [
       //   {
       //     text: "Approved",
@@ -284,8 +313,7 @@ const PaymentManagement = () => {
       //   },
       // ],
       // onFilter: (value, record) => record.address.indexOf(value) === 0,
-      onFilter: (value, record) => record.status.toLowerCase() === value,
-      // onFilter: (value, record) => console.log("hello", value, record),
+      // onFilter: (value, record) => record.status.toLowerCase() === value,
     },
     {
       title: "Date",
@@ -311,7 +339,7 @@ const PaymentManagement = () => {
     const storeResponse = await apiService.getAllPayment();
 
     setPaymentList(
-      storeResponse?.data.filter((item) => ["approved", "won", "lost"].includes(item?.status?.toLowerCase()))
+      storeResponse?.data.filter((item) => ["credited", "debited", "won", "lost"].includes(item?.status?.toLowerCase()))
     );
     setCreditList(storeResponse?.data.filter((item) => ["credit", "withdraw"].includes(item?.status?.toLowerCase())));
     setWithdrawList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "debit"));
@@ -331,7 +359,7 @@ const PaymentManagement = () => {
           key: "1",
           children: (
             <CustomTable
-              columns={paymentColumns}
+              columns={requestColumns}
               // loading={!paymentList?.length}
               dataList={creditList}
               // scrollX={1500}
@@ -344,7 +372,7 @@ const PaymentManagement = () => {
           key: "2",
           children: (
             <CustomTable
-              columns={withdrawColumns}
+              columns={debitColumns}
               // loading={!paymentList?.length}
               dataList={withdrawList}
               // scrollX={1500}
@@ -357,7 +385,7 @@ const PaymentManagement = () => {
           key: "3",
           children: (
             <CustomTable
-              columns={storeColumns}
+              columns={paymentColumns}
               // loading={!paymentList?.length}
               dataList={paymentList}
               // scrollX={1500}

@@ -5,7 +5,7 @@ import CustomTable from "../../components/CustomTable";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import styled from "styled-components";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 
@@ -358,14 +358,20 @@ const BidsManagement = () => {
       dataIndex: "bidAmount",
       key: "2",
       // width: 100,
-      searchable: true,
+      // searchable: true,
+      render: (_, { bidAmount }) => `${bidAmount} Rs.`,
     },
     {
       title: "Winning Amount",
       dataIndex: "bidAmount",
       key: "3",
       // width: 80,
-      render: (_, { bidAmount, type }) => (type == "2x" ? bidAmount * 2 : bidAmount * 100),
+      // render: (_, { bidAmount, type }) => (type == "2x" ? bidAmount * 2 : bidAmount * 100),
+      render: (_, { bidAmount, type }) => (
+        <Tag onClick={() => {}} color={"gold"}>
+          {`${type == "2x" ? bidAmount * 2 : bidAmount * 100} Rs.`}
+        </Tag>
+      ),
     },
     {
       title: "Winning Status",
@@ -387,10 +393,9 @@ const BidsManagement = () => {
     },
     {
       title: "Date",
-      dataIndex: "createdAt",
+      dataIndex: "date",
       key: "3",
       width: 200,
-      // searchable: true,
       render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm:ss a"),
     },
   ];

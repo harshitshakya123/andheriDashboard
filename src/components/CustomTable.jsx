@@ -86,8 +86,9 @@ const CustomTable = ({
     }
     return col;
   });
-  const sorter = () => {
-    // console.log("params", sorter);
+  const sorter = (a, b) => {
+    console.log("params", sorter);
+    return new Date(a.date) - new Date(b.date);
   };
 
   return (

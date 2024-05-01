@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Space, Tabs, Tag, message } from "antd";
+import { Button, Input, Modal, Space, Tabs, Tag } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import styled from "styled-components";
@@ -47,6 +47,7 @@ const UserManagement = () => {
       dataIndex: "amount",
       key: "4",
       // width: 120,
+      render: (_, { amount }) => `${amount} Rs.`,
     },
     {
       title: "Role",
