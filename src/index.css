@@ -116,3 +116,6 @@ div::-webkit-scrollbar-button {
   height: 65vh;
   overflow: hidden;
 }
+.ant-table-container {
+  height: inherit;
+}

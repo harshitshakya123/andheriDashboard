@@ -1,21 +1,48 @@
-import { Tag, Tabs, Button, DatePicker, Modal, InputNumber, Select } from "antd";
+import { Tag, Tabs, Button, DatePicker, Modal, InputNumber, Select, Dropdown, Space, message, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import CustomTable from "../../components/CustomTable";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import styled from "styled-components";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+
 const { RangePicker } = DatePicker;
+
 const BidsManagement = () => {
   const [userBids, setUserBids] = useState([]);
   const [bidsChart, setBidsChart] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [eighteenVal, setEighteenVal] = useState("");
 
   useEffect(() => {
     fetchList();
     fetchChart();
   }, []);
+
+  const handleUpdateChart = async (id, number, name) => {
+    const payload = {
+      name,
+      number,
+      id,
+    };
+    console.log("payload", payload);
+    // const chartResponse = await apiService.updateBidsChart(payload);
+    // if (chartResponse?.success) {
+    //   const updatedBids = bidsChart.map((item) => {
+    //     if (item._id === id) {
+    //       return {
+    //         ...item,
+    //         [name]: number,
+    //       };
+    //     }
+    //     return item;
+    //   });
+    //   message.success(chartResponse?.message);
+    //   setBidsChart(updatedBids);
+    // }
+  };
 
   const allBidsColumns = [
     {
@@ -31,40 +58,186 @@ const BidsManagement = () => {
       dataIndex: "eleven",
       key: "1",
       width: 100,
-      // searchable: true,
-      render: (_, { eleven }) => (eleven ? eleven : "---"),
+      render: (_, { _id, eleven }) =>
+        eleven ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: () => handleUpdateChart(_id, 1, "eleven"),
+                },
+                {
+                  key: "2",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "eleven"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {eleven}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "01:00 PM(2x)",
       dataIndex: "thirteen",
       key: "2",
       width: 100,
-      // searchable: true,
-      render: (_, { thirteen }) => (thirteen ? thirteen : "---"),
+      render: (_, { _id, thirteen }) =>
+        thirteen ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: () => handleUpdateChart(_id, 1, "thirteen"),
+                },
+                {
+                  key: "2",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "thirteen"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {thirteen}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "03:00 PM(2x)",
       dataIndex: "fifteen",
       key: "3",
       width: 100,
-      // searchable: true,
-      render: (_, { fifteen }) => (fifteen ? fifteen : "---"),
+      render: (_, { _id, fifteen }) =>
+        fifteen ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: () => handleUpdateChart(_id, 1, "fifteen"),
+                },
+                {
+                  key: "2",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "fifteen"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {fifteen}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "05:00 PM(2x)",
       dataIndex: "seventeen",
       key: "4",
       width: 100,
-      // searchable: true,
-      render: (_, { seventeen }) => (seventeen ? seventeen : "---"),
+      render: (_, { _id, seventeen }) =>
+        seventeen ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: () => handleUpdateChart(_id, 1, "seventeen"),
+                },
+                {
+                  key: "4",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "seventeen"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {seventeen}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "06:00 PM(100x)",
       dataIndex: "eighteen",
       key: "5",
       width: 100,
-      // searchable: true,
-      render: (_, { eighteen }) => (eighteen ? eighteen : "---"),
+      render: (_, { _id, eighteen }) =>
+        eighteen ? (
+          <Popconfirm
+            title="Update 100x"
+            // description="Are you sure to delete this task?"
+            description={
+              <InputNumber
+                min={0}
+                max={99}
+                onChange={(e) => {
+                  setEighteenVal(e);
+                }}
+              />
+            }
+            onConfirm={() => handleUpdateChart(_id, eighteenVal, "eighteen")}
+            // onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button>{eighteen}</Button>
+          </Popconfirm>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "07:00 PM(2x)",
@@ -72,15 +245,78 @@ const BidsManagement = () => {
       key: "5",
       width: 100,
       // searchable: true,
-      render: (_, { nineteen }) => (nineteen ? nineteen : "---"),
+      render: (_, { _id, nineteen }) =>
+        nineteen ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: () => handleUpdateChart(_id, 1, "nineteen"),
+                },
+                {
+                  key: "2",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "nineteen"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {nineteen}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
     {
       title: "09:00 PM(2x)",
       dataIndex: "twentyone",
       key: "5",
       width: 100,
-      // searchable: true,
-      render: (_, { twentyone }) => (twentyone ? twentyone : "---"),
+      render: (_, { _id, twentyone }) =>
+        twentyone ? (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: "1",
+                  onClick: handleUpdateChart(_id, 1, "twentyone"),
+                },
+                {
+                  key: "2",
+                  // danger: true,
+                  label: "2",
+                  onClick: () => handleUpdateChart(_id, 2, "twentyone"),
+                },
+              ],
+            }}
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <Space>
+                {twentyone}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          "---"
+        ),
     },
   ];
   const userBidsColumns = [
@@ -129,7 +365,7 @@ const BidsManagement = () => {
       dataIndex: "bidAmount",
       key: "3",
       // width: 80,
-      render: (_, { bidAmount }) => bidAmount * 2,
+      render: (_, { bidAmount, type }) => (type == "2x" ? bidAmount * 2 : bidAmount * 100),
     },
     {
       title: "Winning Status",
@@ -139,8 +375,11 @@ const BidsManagement = () => {
       render: (_, { winningStatus }) => {
         return (
           <div style={{ cursor: "pointer" }}>
-            <Tag onClick={() => {}} color={winningStatus === "won" ? "green" : "red"}>
-              {winningStatus}
+            <Tag
+              onClick={() => {}}
+              color={winningStatus === "won" ? "green" : winningStatus === "lost" ? "red" : "blue"}
+            >
+              {winningStatus.toUpperCase()}
             </Tag>
           </div>
         );
@@ -150,9 +389,9 @@ const BidsManagement = () => {
       title: "Date",
       dataIndex: "createdAt",
       key: "3",
-      // width: 80,
+      width: 200,
       // searchable: true,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm:ss a"),
     },
   ];
   const fetchList = async (startDate, endDate) => {
@@ -200,7 +439,7 @@ const BidsManagement = () => {
                 // loading={!userBids?.length}
                 dataList={bidsChart}
                 // scrollX={1500}
-                scrollY={"calc(100vh - 280px)"}
+                scrollY={"calc(100% - 77px)"}
               />
             ),
           },
@@ -213,13 +452,14 @@ const BidsManagement = () => {
                 // loading={!userBids?.length}
                 dataList={userBids}
                 // scrollX={1500}
-                scrollY={"calc(100vh - 280px)"}
+                // scrollY={"calc(100vh - 280px)"}
+                scrollY={"calc(100% - 77px)"}
               />
             ),
           },
         ]}
       />
-      <MyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} fetchList={fetchList} />
+      {isModalOpen && <MyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} fetchList={fetchList} />}
     </>
   );
 };
@@ -242,9 +482,14 @@ const MyModal = ({ isModalOpen, setIsModalOpen, fetchList }) => {
 
   const handleAdd = async (payload) => {
     setEditLoading(true);
-    await apiService.addBid(payload);
+    const data = await apiService.addBid(payload);
+    if (data?.success) {
+      message.success("Bid Added Successfully");
+    } else {
+      message.error(data?.message);
+    }
     fetchList();
-
+    setEditFormData("");
     setEditLoading(false);
     setIsModalOpen(false);
   };

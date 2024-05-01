@@ -10,6 +10,8 @@ import {
   LOGIN_OUT,
   ADD_BID_URL,
   APPROVE_PAYMENT_URL,
+  UPDATE_BIDS_CHART_URL,
+  UPDATE_USER_STATUS_URL,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -18,6 +20,14 @@ const apiService = {
   getUserList: async () => {
     try {
       const response = await httpService.get(GET_USER_LIST_URL);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  updateUserStatus: async (id) => {
+    try {
+      const response = await httpService.get(`${UPDATE_USER_STATUS_URL}?id=${id}`);
       return response.data;
     } catch (err) {
       handleFailure(err);
@@ -49,6 +59,14 @@ const apiService = {
         url = `${url}&endDate=${endDate}`;
       }
       const response = await httpService.get(url);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  updateBidsChart: async (payload) => {
+    try {
+      const response = await httpService.post(UPDATE_BIDS_CHART_URL, payload);
       return response.data;
     } catch (err) {
       handleFailure(err);

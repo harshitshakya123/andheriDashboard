@@ -186,7 +186,7 @@ const UserDetail = () => {
         return (
           <div style={{ cursor: "pointer" }}>
             <Tag onClick={() => {}} color={winningStatus === "won" ? "green" : "red"}>
-              {winningStatus}
+              {winningStatus.toUpperCase()}
             </Tag>
           </div>
         );
@@ -218,7 +218,7 @@ const UserDetail = () => {
         return (
           <div style={{ cursor: "pointer" }}>
             <Tag onClick={() => {}} color={status === "Approved" ? "green" : "blue"}>
-              {status}
+              {status.toUpperCase()}
             </Tag>
           </div>
         );
@@ -230,7 +230,7 @@ const UserDetail = () => {
       key: "1",
       width: 100,
       // searchable: true,
-      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY"),
+      render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm:ss a"),
     },
   ];
 
@@ -239,7 +239,7 @@ const UserDetail = () => {
       key: "1",
       label: "My Bids",
       children: (
-        <CustomTable columns={followColumns} dataList={followers} loading={loading} scrollY={"calc(100vh - 420px)"} />
+        <CustomTable columns={followColumns} dataList={followers} loading={loading} scrollY={"calc(100% - 55px)"} />
       ),
     },
     {
@@ -250,60 +250,60 @@ const UserDetail = () => {
           columns={transactionColumns}
           dataList={following}
           loading={followLoading}
-          scrollY={"calc(100vh - 420px)"}
+          scrollY={"calc(100% - 55px)"}
         />
       ),
     },
   ];
 
-  const handleImageUpload = (info) => {
-    // const file = info.file.originFileObj;
-    const file = info.file;
-    if (file) {
-      const fileSizeInMB = file.size / (1024 * 1024); // Convert bytes to MB
-      if (fileSizeInMB > MAX_IMAGE_FILE_SIZE_MB) {
-        message.error(`File size exceeds ${MAX_IMAGE_FILE_SIZE_MB} MB limit`);
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const data = await apiService.editUserImage({ id: path, file, type: "user" });
-        if (data?.status) {
-          message.success("Image uploaded successfully");
-          setUserDetails({ ...userDetails, profile_picture_url: reader.result });
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  const showDeleteConfirm = (e) => {
-    e.stopPropagation();
-    confirm({
-      title: `Are you want to delete the image?`,
-      icon: <ExclamationCircleFilled />,
-      okText: "Yes",
-      okType: "danger",
-      loading: true,
-      cancelText: "No",
-      onOk() {
-        return new Promise((resolve, reject) => {
-          apiService
-            .deleteUserImage(path, "user")
-            .then(() => {
-              message.success("Image deleted successfully");
-              setUserDetails({ ...userDetails, profile_picture_url: "" });
-              resolve();
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        });
-      },
-      onCancel() {
-        console.log("Cancel");
-      },
-    });
-  };
+  // const handleImageUpload = (info) => {
+  //   // const file = info.file.originFileObj;
+  //   const file = info.file;
+  //   if (file) {
+  //     const fileSizeInMB = file.size / (1024 * 1024); // Convert bytes to MB
+  //     if (fileSizeInMB > MAX_IMAGE_FILE_SIZE_MB) {
+  //       message.error(`File size exceeds ${MAX_IMAGE_FILE_SIZE_MB} MB limit`);
+  //       return;
+  //     }
+  //     const reader = new FileReader();
+  //     reader.onload = async () => {
+  //       const data = await apiService.editUserImage({ id: path, file, type: "user" });
+  //       if (data?.status) {
+  //         message.success("Image uploaded successfully");
+  //         setUserDetails({ ...userDetails, profile_picture_url: reader.result });
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  // const showDeleteConfirm = (e) => {
+  //   e.stopPropagation();
+  //   confirm({
+  //     title: `Are you want to delete the image?`,
+  //     icon: <ExclamationCircleFilled />,
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     loading: true,
+  //     cancelText: "No",
+  //     onOk() {
+  //       return new Promise((resolve, reject) => {
+  //         apiService
+  //           .deleteUserImage(path, "user")
+  //           .then(() => {
+  //             message.success("Image deleted successfully");
+  //             setUserDetails({ ...userDetails, profile_picture_url: "" });
+  //             resolve();
+  //           })
+  //           .catch((error) => {
+  //             reject(error);
+  //           });
+  //       });
+  //     },
+  //     onCancel() {
+  //       console.log("Cancel");
+  //     },
+  //   });
+  // };
   const handleResetPass = async (e) => {
     setPassLoading(true);
     const updatePayload = {
@@ -345,7 +345,7 @@ const UserDetail = () => {
                 />
                 {/* <Image rootClassName="crown-image" src={userDetails?.crown_image || emptyImage} />
                 <Image rootClassName="social_avatar" src={userDetails?.social_avatar || emptyImage} /> */}
-                <div className="image-action">
+                {/* <div className="image-action">
                   <Upload
                     multiple={false}
                     maxCount={1}
@@ -359,7 +359,7 @@ const UserDetail = () => {
                     </Button>
                   </Upload>
                   <Button onClick={(e) => showDeleteConfirm(e)} danger icon={<DeleteOutlined />} />
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="right-container">
@@ -385,11 +385,13 @@ const UserDetail = () => {
                 </div> */}
                 <div className="item">
                   <div className="label">Phone Number</div>
-                  <Paragraph copyable>{userDetails?.phone}</Paragraph>
+                  <Paragraph copyable>{`+91 ${userDetails?.phone}`}</Paragraph>
                 </div>
                 <div className="item">
                   <div className="label">Role</div>
-                  <span>{userDetails?.role}</span>
+                  <span>
+                    <Tag color={"blue"}>{userDetails?.role?.toUpperCase()}</Tag>
+                  </span>
                 </div>
                 <div className="item">
                   <div className="label">Amount</div>

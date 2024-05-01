@@ -9,9 +9,9 @@ export const handleFailure = async (err) => {
     if (status === 401) {
       localStorage.clear();
       message.error("Token is expired !!");
-      // setTimeout(() => {
-      //   window.location.href = "/login";
-      // }, 1000);
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
     }
     if (errorMessage[status]) {
       message.error(errorMessage[status]);

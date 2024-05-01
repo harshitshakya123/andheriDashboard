@@ -66,9 +66,12 @@ const PaymentManagement = () => {
       key: "2",
       width: 100,
       // searchable: true,
-      render: (_, { attachment }) => (
-        <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-      ),
+      render: (_, { attachment }) =>
+        attachment === "won" ? (
+          "---"
+        ) : (
+          <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+        ),
     },
 
     {
@@ -91,7 +94,7 @@ const PaymentManagement = () => {
               onClick={() => status.toLowerCase() === "credit" && handleUpdateStatus(_id)}
               color={status.toLowerCase() === "approved" ? "green" : status === "credit" ? "orange" : "blue"}
             >
-              {status}
+              {status.toUpperCase()}
             </Tag>
           </div>
         );
@@ -143,16 +146,16 @@ const PaymentManagement = () => {
       ),
       // searchable: true,
     },
-    {
-      title: "Attachment",
-      dataIndex: "attachment",
-      key: "2",
-      width: 100,
-      // searchable: true,
-      render: (_, { attachment }) => (
-        <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-      ),
-    },
+    // {
+    //   title: "Attachment",
+    //   dataIndex: "attachment",
+    //   key: "2",
+    //   width: 100,
+    //   // searchable: true,
+    //   render: (_, { attachment }) => (
+    //     <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+    //   ),
+    // },
 
     {
       title: "Amount",
@@ -181,7 +184,7 @@ const PaymentManagement = () => {
               onClick={() => status.toLowerCase() === "credit" && handleUpdateStatus(_id)}
               color={status.toLowerCase() === "approved" ? "green" : status === "credit" ? "orange" : "blue"}
             >
-              {status}
+              {status.toUpperCase()}
             </Tag>
           </div>
         );
@@ -264,7 +267,7 @@ const PaymentManagement = () => {
               onClick={() => status.toLowerCase() === "credit" && handleUpdateStatus(_id)}
               color={status.toLowerCase() === "approved" ? "green" : status === "credit" ? "orange" : "blue"}
             >
-              {status}
+              {status.toUpperCase()}
             </Tag>
           </div>
         );
@@ -310,8 +313,8 @@ const PaymentManagement = () => {
     setPaymentList(
       storeResponse?.data.filter((item) => ["approved", "won", "lost"].includes(item?.status?.toLowerCase()))
     );
-    setCreditList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "credit"));
-    setWithdrawList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "withdraw"));
+    setCreditList(storeResponse?.data.filter((item) => ["credit", "withdraw"].includes(item?.status?.toLowerCase())));
+    setWithdrawList(storeResponse?.data.filter((item) => item?.status?.toLowerCase() === "debit"));
   };
 
   return (
@@ -324,7 +327,7 @@ const PaymentManagement = () => {
       }}
       items={[
         {
-          label: "Credit List",
+          label: "Request List",
           key: "1",
           children: (
             <CustomTable
@@ -332,12 +335,12 @@ const PaymentManagement = () => {
               // loading={!paymentList?.length}
               dataList={creditList}
               // scrollX={1500}
-              scrollY={"calc(100vh - 280px)"}
+              scrollY={"calc(100% - 77px)"}
             />
           ),
         },
         {
-          label: "Withdraw List",
+          label: "Debit List",
           key: "2",
           children: (
             <CustomTable
@@ -345,7 +348,7 @@ const PaymentManagement = () => {
               // loading={!paymentList?.length}
               dataList={withdrawList}
               // scrollX={1500}
-              scrollY={"calc(100vh - 280px)"}
+              scrollY={"calc(100% - 77px)"}
             />
           ),
         },
@@ -358,7 +361,7 @@ const PaymentManagement = () => {
               // loading={!paymentList?.length}
               dataList={paymentList}
               // scrollX={1500}
-              scrollY={"calc(100vh - 280px)"}
+              scrollY={"calc(100% - 77px)"}
             />
           ),
         },

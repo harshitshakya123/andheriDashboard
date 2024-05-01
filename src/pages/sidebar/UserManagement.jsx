@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Space, Tabs, Tag } from "antd";
+import { Button, Input, Modal, Space, Tabs, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import styled from "styled-components";
@@ -20,6 +20,13 @@ const UserManagement = () => {
   useEffect(() => {
     fetchList();
   }, []);
+
+  const handleStatus = async (id) => {
+    const data = await apiService.updateUserStatus(id);
+    console.log("data", data);
+    // fetchList();
+    // message.success("User Status Updated successfully");
+  };
   const userColumns = [
     {
       title: t("user.name"),
@@ -58,7 +65,7 @@ const UserManagement = () => {
       title: "Created At",
       dataIndex: "createdAt",
       key: "9",
-      // width: 80,
+      width: 200,
       render: (_, { createdAt }) => moment(createdAt).format("DD-MM-YYYY hh:mm a"),
     },
     {
@@ -66,10 +73,10 @@ const UserManagement = () => {
       key: "status",
       dataIndex: "status",
       // width: 80,
-      render: (_, { status }) => {
+      render: (_, { status, _id, activeStatus }) => {
         return (
-          <div style={{ cursor: "pointer" }}>
-            <Tag color={+status ? "geekblue" : "green"}>{+status ? "Inactive" : "Active"}</Tag>
+          <div onClick={() => handleStatus(_id)} style={{ cursor: "pointer" }}>
+            <Tag color={+status ? "geekblue" : "green"}>{!activeStatus ? "Inactive" : "Active"}</Tag>
           </div>
         );
       },
