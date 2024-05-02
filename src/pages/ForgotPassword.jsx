@@ -12,9 +12,7 @@ const ForgotPassword = () => {
 
   const handleForgot = async (values) => {
     setLoading(true);
-    console.log(values);
     const data = await commonService.forgotRegister(values?.email);
-    console.log(data);
     if (data?.status) {
       message.success("Sent Password Reset Link Successfully");
     }

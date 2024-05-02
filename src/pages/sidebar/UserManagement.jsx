@@ -53,7 +53,14 @@ const UserManagement = () => {
       dataIndex: "amount",
       key: "4",
       // width: 120,
-      render: (_, { amount }) => `${amount} Rs.`,
+      // render: (_, { amount }) => `${amount} Rs.`,
+      render: (_, { amount }) => {
+        return (
+          <div style={{ cursor: "pointer" }}>
+            <Tag color={"gold"}>{`${amount} Rs.`}</Tag>
+          </div>
+        );
+      },
     },
     {
       title: "Role",

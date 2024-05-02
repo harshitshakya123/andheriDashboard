@@ -13,14 +13,12 @@ const Register = () => {
 
   const handleRegister = async (values) => {
     setLoading(true);
-    console.log(values);
     const payload = {
       fullName: values?.fullName,
       phone: values?.phone,
       password: values?.password,
     };
     const data = await commonService.adminRegister(payload);
-    console.log("registerData", data);
     if (data?.success) {
       navigate("/login");
       message.success("Register Successfully!!");

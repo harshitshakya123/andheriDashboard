@@ -15,7 +15,6 @@ const Login = () => {
   const handleLogin = async (values) => {
     setLoading(true);
     const data = await commonService.login(values);
-    console.log(data?.data);
     if (data?.data?.accessToken) {
       dispatchUserProfile({
         type: "ADD_USER_DATA",

@@ -24,7 +24,6 @@ const CustomTable = ({
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-    console.log(selectedKeys, dataIndex);
   };
 
   const handleReset = (clearFilters) => {

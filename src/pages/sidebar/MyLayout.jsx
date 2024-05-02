@@ -46,7 +46,6 @@ const MyLayout = ({ userRole, signedIn, children }) => {
 
     return filteredItems;
   }
-  console.log("userRole", userRole);
   const roleBaseSidebar = userRole?.length && getManagerMenuItems(userRole);
 
   const { token } = theme.useToken();
@@ -88,7 +87,6 @@ const MyLayout = ({ userRole, signedIn, children }) => {
                 selectedKeys={[selectedSidebar]}
                 items={roleBaseSidebar}
                 onClick={(e) => {
-                  console.log("selected", e.key);
                   setSelectedSidebar(e.key);
                   navigate(`/sidebar/${e.key}`);
                 }}

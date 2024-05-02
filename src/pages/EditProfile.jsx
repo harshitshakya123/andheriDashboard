@@ -117,7 +117,6 @@ const EditProfile = () => {
     }
     setEditLoading(true);
     const res = await apiService.updateAdminDetails({ ...editData });
-    console.log(res, editData);
     if (res?.success) {
       message.success("Profile updated successfully");
       setIsEdit((prev) => !prev);
@@ -239,7 +238,7 @@ const EditProfile = () => {
               </div> */}
               <div className="item">
                 <div className="label">Phone Number</div>
-                <span>{adminData?.phone}</span>
+                <span>{"+91 " + adminData?.phone}</span>
               </div>
               {/* <div className="item">
                 <div className="label">Status</div>
@@ -249,7 +248,7 @@ const EditProfile = () => {
                 <div className="label">Amount</div>
                 {/* <span>{adminData?.amount}</span>
                  */}
-                <Tag color={"orange"}>{adminData?.amount || "NA"}</Tag>
+                <Tag color={"orange"}>{adminData?.amount + " Rs." || "NA"}</Tag>
               </div>
               <div className="item">
                 <div className="label">Role</div>
