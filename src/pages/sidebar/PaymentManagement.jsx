@@ -27,6 +27,15 @@ const PaymentManagement = () => {
     fetchList();
     message.success("Payment Approved successfully");
   };
+  const handleDecline = async (id) => {
+    const res = await apiService.declinePayment(id);
+    console.log(res);
+    if (res?.success) {
+      const updatedPayment = creditList.filter((item) => item._id !== id);
+      setCreditList(updatedPayment);
+      message.success("Payment Decline successfully");
+    }
+  };
   const statusFilters = [
     {
       text: "Approved",
@@ -329,9 +338,13 @@ const PaymentManagement = () => {
       // fixed: "right",
       width: 80,
       render: (_, data) => (
-        <Space size="middle">
-          <a onClick={() => handleApprove(data._id)}>Approve</a>
-        </Space>
+        <>
+          <Space size="middle">
+            <a onClick={() => handleApprove(data._id)}>Approve</a>
+
+            <a onClick={() => handleDecline(data._id)}>Decline</a>
+          </Space>
+        </>
       ),
     },
   ];
