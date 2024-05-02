@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Space, Tabs, Tag } from "antd";
+import { Button, Input, Modal, Space, Tabs, Tag, message } from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import styled from "styled-components";
@@ -23,9 +23,15 @@ const UserManagement = () => {
 
   const handleStatus = async (id) => {
     const data = await apiService.updateUserStatus(id);
-    console.log("data", data);
+    const updatedUser = userList.map((user) => {
+      if (user._id === id) {
+        return data?.data;
+      }
+      return user;
+    });
+    setUserList(updatedUser);
     // fetchList();
-    // message.success("User Status Updated successfully");
+    message.success("User Status Updated successfully");
   };
   const userColumns = [
     {
@@ -74,10 +80,10 @@ const UserManagement = () => {
       key: "status",
       dataIndex: "status",
       // width: 80,
-      render: (_, { status, _id, activeStatus }) => {
+      render: (_, { _id, activeStatus }) => {
         return (
           <div onClick={() => handleStatus(_id)} style={{ cursor: "pointer" }}>
-            <Tag color={+status ? "geekblue" : "green"}>{!activeStatus ? "Inactive" : "Active"}</Tag>
+            <Tag color={!activeStatus ? "geekblue" : "green"}>{!activeStatus ? "Inactive" : "Active"}</Tag>
           </div>
         );
       },
