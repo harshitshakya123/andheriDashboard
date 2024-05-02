@@ -75,12 +75,7 @@ const PaymentManagement = () => {
       key: "2",
       width: 100,
       // searchable: true,
-      render: (_, { status }) =>
-        status === "credited" ? (
-          <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-        ) : (
-          "---"
-        ),
+      render: (_, { attachment, status }) => (status === "credited" ? <Image width={50} src={attachment} /> : "---"),
     },
 
     {
@@ -181,7 +176,7 @@ const PaymentManagement = () => {
       key: "3",
       width: 80,
       // searchable: true,
-      render: (_, { userAmount, type }) => (
+      render: (_, { userAmount }) => (
         <Tag onClick={() => {}} color={"gold"}>
           {`${userAmount} Rs.`}
         </Tag>
@@ -273,11 +268,7 @@ const PaymentManagement = () => {
       width: 80,
       // searchable: true,
       render: (_, { attachment, status }) =>
-        status.toLowerCase() === "withdraw" ? (
-          "---"
-        ) : (
-          <Image width={50} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-        ),
+        status.toLowerCase() === "withdraw" ? "---" : <Image width={50} src={attachment} />,
     },
 
     {
