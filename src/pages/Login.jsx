@@ -78,9 +78,9 @@ const Login = () => {
             {/* <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item> */}
-            <a className="login-form-forgot" onClick={() => navigate("/forgot")}>
+            {/* <a className="login-form-forgot" onClick={() => navigate("/forgot")}>
               Forgot Password
-            </a>
+          </a>*/}
 
             <a className="login-form-forgot" onClick={() => navigate("/register")}>
               Sign Up
