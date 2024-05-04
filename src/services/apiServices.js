@@ -13,6 +13,7 @@ import {
   UPDATE_BIDS_CHART_URL,
   UPDATE_USER_STATUS_URL,
   DECLINE_PAYMENT_URL,
+  CREATE_BIDS_CHART_URL,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -68,6 +69,14 @@ const apiService = {
   updateBidsChart: async (payload) => {
     try {
       const response = await httpService.post(UPDATE_BIDS_CHART_URL, payload);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  createBidsChart: async (number) => {
+    try {
+      const response = await httpService.post(CREATE_BIDS_CHART_URL, { number });
       return response.data;
     } catch (err) {
       handleFailure(err);

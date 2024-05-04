@@ -15,7 +15,11 @@ export const handleFailure = async (err) => {
     }
     if (errorMessage[status]) {
       message.error(errorMessage[status]);
+    } else if (err?.response?.status === 403) {
+      console.log("enter");
+      message.success(err);
     }
+    console.log("err", err, err?.response.status);
   } else {
     message.info("Please check your internet connection !!");
   }

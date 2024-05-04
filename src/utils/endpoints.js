@@ -16,6 +16,7 @@ export const UPDATE_USER_STATUS_URL = `/api/v1/users/user-status`;
 export const GET_BIDS_LIST_URL = `api/v1/bids/get`;
 export const GET_BIDS_CHART_URL = `api/v1/bids/bids-chart`;
 export const UPDATE_BIDS_CHART_URL = `api/v1/bids/update-bid-chart`;
+export const CREATE_BIDS_CHART_URL = `api/v1/bids/create-bid-chart`;
 export const UPDATE_PAYMENT_STATUS_URL = `api/v1/payment/approve`;
 export const ADD_BID_URL = `api/v1/bids/add`;
 
