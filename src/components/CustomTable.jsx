@@ -102,12 +102,13 @@ const CustomTable = ({
           x: scrollX,
           y: scrollY,
         }}
-        // pagination={{
-        //   onChange: (e) => console.log(e),
-        //   pageSize: 10,
-        //   total: 20,
-        // }}
-        pagination={true}
+        pagination={{
+          showSizeChanger: false,
+          onChange: (e) => console.log(e),
+          pageSize: 30,
+          total: dataList?.length,
+        }}
+        // pagination={true}
       />
       {/* {pagination && (
         <div
