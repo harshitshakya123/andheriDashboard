@@ -14,6 +14,7 @@ import {
   UPDATE_USER_STATUS_URL,
   DECLINE_PAYMENT_URL,
   CREATE_BIDS_CHART_URL,
+  CHECK_BIDS_STATUS_URL,
 } from "../utils/endpoints";
 import { handleFailure } from "../utils/handleFailure";
 import httpService from "./httpService";
@@ -52,10 +53,16 @@ const apiService = {
     }
   },
   getBidsChart: async (startDate, endDate) => {
+    const currentDate = new Date();
+
+    // Set the date to the first day of the month
+    currentDate.setDate(1);
+    // Format the date as "YYYY-MM-DD"
+    var formattedDate = currentDate.toISOString().slice(0, 10);
     try {
       let url = GET_BIDS_CHART_URL;
-      if (startDate) {
-        url = `${url}?startDate=${startDate}`;
+      if (startDate || formattedDate) {
+        url = `${url}?startDate=${startDate || formattedDate}`;
       }
       if (endDate) {
         url = `${url}&endDate=${endDate}`;
@@ -170,6 +177,14 @@ const apiService = {
   addBid: async (payload) => {
     try {
       const response = await httpService.post(ADD_BID_URL, payload);
+      return response.data;
+    } catch (err) {
+      handleFailure(err);
+    }
+  },
+  getBidsStatus: async (date) => {
+    try {
+      const response = await httpService.get(`${CHECK_BIDS_STATUS_URL}?selectedDate=${date}`);
       return response.data;
     } catch (err) {
       handleFailure(err);

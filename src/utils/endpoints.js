@@ -19,6 +19,7 @@ export const UPDATE_BIDS_CHART_URL = `api/v1/bids/update-bid-chart`;
 export const CREATE_BIDS_CHART_URL = `api/v1/bids/create-bid-chart`;
 export const UPDATE_PAYMENT_STATUS_URL = `api/v1/payment/approve`;
 export const ADD_BID_URL = `api/v1/bids/add`;
+export const CHECK_BIDS_STATUS_URL = `api/v1/bids/check-bid`;
 
 //payment
 export const GET_PAYMENT_LIST_URL = `api/v1/payment/get`;

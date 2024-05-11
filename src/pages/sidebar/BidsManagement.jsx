@@ -1,4 +1,17 @@
-import { Tag, Tabs, Button, DatePicker, Modal, InputNumber, Select, Dropdown, Space, message, Popconfirm } from "antd";
+import {
+  Tag,
+  Tabs,
+  Button,
+  DatePicker,
+  Modal,
+  InputNumber,
+  Select,
+  Dropdown,
+  Space,
+  message,
+  Popconfirm,
+  Card,
+} from "antd";
 import { useEffect, useState } from "react";
 import apiService from "../../services/apiServices";
 import CustomTable from "../../components/CustomTable";
@@ -8,6 +21,7 @@ import styled from "styled-components";
 import { DownOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
+import en from "antd/es/date-picker/locale/en_US";
 
 const BidsManagement = () => {
   const [userBids, setUserBids] = useState([]);
@@ -15,6 +29,7 @@ const BidsManagement = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eighteenVal, setEighteenVal] = useState("");
+  const [enableModal, setEnableModal] = useState(false);
 
   useEffect(() => {
     fetchList();
@@ -45,7 +60,6 @@ const BidsManagement = () => {
   };
   const createBidChart = async (number) => {
     const chartResponse = await apiService.createBidsChart(number);
-    console.log("chartResponse", chartResponse);
 
     if (chartResponse?.message !== "Record already exists") {
       setBidsChart((prev) => [...prev, chartResponse?.data]);
@@ -430,9 +444,28 @@ const BidsManagement = () => {
   const operations = (
     <div>
       {activeTab === "2" ? (
-        <Button style={{ marginRight: "10px" }} type="primary" onClick={() => setIsModalOpen(true)}>
-          Add Bid
-        </Button>
+        <>
+          <Button
+            style={{ marginRight: "10px" }}
+            type="primary"
+            onClick={() => {
+              setEnableModal("check");
+              setIsModalOpen(true);
+            }}
+          >
+            Check Bid Status
+          </Button>
+          <Button
+            style={{ marginRight: "10px" }}
+            type="primary"
+            onClick={() => {
+              setEnableModal("add");
+              setIsModalOpen(true);
+            }}
+          >
+            Add Bid
+          </Button>
+        </>
       ) : (
         <Dropdown
           menu={{
@@ -504,24 +537,37 @@ const BidsManagement = () => {
           },
         ]}
       />
-      {isModalOpen && <MyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} fetchList={fetchList} />}
+      {isModalOpen && (
+        <MyModal
+          enableModal={enableModal}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          fetchList={fetchList}
+        />
+      )}
     </>
   );
 };
 
 export default BidsManagement;
 
-const MyModal = ({ isModalOpen, setIsModalOpen, fetchList }) => {
+const MyModal = ({ isModalOpen, setIsModalOpen, fetchList, enableModal }) => {
   const [editLoading, setEditLoading] = useState(false);
   const [editFormData, setEditFormData] = useState("");
   const [userData, setUserData] = useState([]);
+  const [checkBids, setCheckBids] = useState([]);
 
   useEffect(() => {
-    fetch();
+    enableModal === "add" && fetch();
   }, []);
   const fetch = async () => {
     const response = await apiService.getUserList();
     setUserData(response?.data?.map((item) => ({ key: item?._id, label: item?.fullName, value: item?._id })));
+  };
+
+  const handleFetchBidsStatus = async (date, dateStr) => {
+    const res = await apiService.getBidsStatus(dateStr);
+    setCheckBids(res?.data || []);
   };
 
   const handleAdd = async (payload) => {
@@ -538,9 +584,21 @@ const MyModal = ({ isModalOpen, setIsModalOpen, fetchList }) => {
     setIsModalOpen(false);
   };
 
+  const buddhistLocale = {
+    ...en,
+    lang: {
+      ...en.lang,
+      // fieldDateFormat: "YYYY-MM-DD",
+      // fieldDateTimeFormat: "YYYY-MM-DD HH:mm:ss",
+      fieldDateFormat: "YYYY-MM-DD",
+      fieldDateTimeFormat: "YYYY-MM-DD HH",
+      yearFormat: "YYYY",
+      cellYearFormat: "YYYY",
+    },
+  };
   return (
     <CustomModal
-      title="Add Bid"
+      title={enableModal === "check" ? "Check Bid Status" : "Add Bid"}
       open={isModalOpen}
       onCancel={() => {
         // setEditData(null);
@@ -569,72 +627,112 @@ const MyModal = ({ isModalOpen, setIsModalOpen, fetchList }) => {
       ]}
     >
       <div>
-        <div style={{ display: "flex", gap: "10px", marginBottom: 10 }}>
-          <div>
-            <label>Type</label>
-            <div>
-              <Select
-                placeholder="Select Type"
-                // defaultValue="lucy"
+        {enableModal === "add" && (
+          <div className="add-bid">
+            <div style={{ display: "flex", gap: "10px", marginBottom: 10 }}>
+              <div>
+                <label>Type</label>
+                <div>
+                  <Select
+                    placeholder="Select Type"
+                    // defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={(e) => setEditFormData((prev) => ({ ...prev, type: e }))}
+                    options={[
+                      {
+                        value: "2x",
+                        label: "2x",
+                      },
+                      {
+                        value: "100x",
+                        label: "100x",
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Users</label>
+                <div>
+                  <Select
+                    placeholder="Select User"
+                    // defaultValue="lucy"
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={(e) => setEditFormData((prev) => ({ ...prev, id: e }))}
+                    options={userData}
+                  />
+                </div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <div>
+                <label>Bid Amount</label>
+                <div>
+                  <InputNumber
+                    // min={editFormData?.type === "2x" ? 1 : 0}
+                    // max={editFormData?.type === "2x" ? 2 : 99}
+                    onChange={(e) => {
+                      setEditFormData((prev) => ({ ...prev, bidAmount: e }));
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Bid Number</label>
+                <div>
+                  <InputNumber
+                    min={editFormData?.type === "2x" ? 1 : 0}
+                    max={editFormData?.type === "2x" ? 2 : 99}
+                    onChange={(e) => {
+                      setEditFormData((prev) => ({ ...prev, number: e }));
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {enableModal === "check" && (
+          <div className="check-bid">
+            <DatePicker
+              locale={buddhistLocale}
+              onChange={handleFetchBidsStatus}
+              hideDisabledOptions
+              use12Hours
+              showMinute={false}
+              format={"YYYY/MM/DD HH"}
+              showTime={{
+                format: "HH",
+              }}
+              disabledHours={() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20, 22, 23]}
+            />
+            <div style={{ padding: 10 }}>
+              <div>Bids Status:</div>
+              <div
                 style={{
-                  width: 120,
+                  display: "flex",
+                  gap: 10,
+                  justifyContent: "space-around",
+                  flexWrap: "wrap",
+                  maxHeight: 265,
+                  overflowY: "auto",
                 }}
-                onChange={(e) => setEditFormData((prev) => ({ ...prev, type: e }))}
-                options={[
-                  {
-                    value: "2x",
-                    label: "2x",
-                  },
-                  {
-                    value: "100x",
-                    label: "100x",
-                  },
-                ]}
-              />
+              >
+                {checkBids?.map((item, index) => (
+                  <div key={index}>
+                    <Card title={`Bid Number ${item?._id}`} bordered={false}>
+                      Total Bid Amount: {item?.totalBidAmount} Rs.
+                    </Card>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div>
-            <label>Users</label>
-            <div>
-              <Select
-                placeholder="Select User"
-                // defaultValue="lucy"
-                style={{
-                  width: 120,
-                }}
-                // onChange={(e, d) => console.log(e, d)}
-                onChange={(e) => setEditFormData((prev) => ({ ...prev, id: e }))}
-                options={userData}
-              />
-            </div>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <div>
-            <label>Bid Amount</label>
-            <div>
-              <InputNumber
-                // min={editFormData?.type === "2x" ? 1 : 0}
-                // max={editFormData?.type === "2x" ? 2 : 99}
-                onChange={(e) => {
-                  setEditFormData((prev) => ({ ...prev, bidAmount: e }));
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <label>Bid Number</label>
-            <div>
-              <InputNumber
-                min={editFormData?.type === "2x" ? 1 : 0}
-                max={editFormData?.type === "2x" ? 2 : 99}
-                onChange={(e) => {
-                  setEditFormData((prev) => ({ ...prev, number: e }));
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </CustomModal>
   );
